@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>STREET YEET</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+
+    <div class="hud">
+      <span>Yeets <b id="yeets">0</b></span>
+      <span>Total <b id="total">0 m</b></span>
+      <span>Best <b id="best">0 m</b></span>
+    </div>
+    <button id="mute" class="mute" type="button" aria-label="Toggle sound">🔊</button>
+
+    <div id="banner" class="banner">
+      <div class="banner-title"></div>
+      <div class="banner-detail"></div>
+      <div class="banner-where"></div>
+    </div>
+
+    <div id="charge" class="charge"><div id="charge-fill"></div></div>
+    <p id="hint" class="hint"></p>
+
+    <div id="stick" class="stick"><div id="knob" class="knob"></div></div>
+    <button id="yeet-btn" class="yeet-btn" type="button">YEET</button>
+
+    <div id="overlay" class="overlay">
+      <h1>STREET YEET</h1>
+      <p class="tagline">One gigantic fist. One city block. Everything must go.</p>
+      <ul class="how desktop-only">
+        <li><b>WASD</b> or arrows to walk, <b>Shift</b> to run</li>
+        <li><b>Mouse</b> to look around, <b>Q</b>/<b>E</b> to turn the camera</li>
+        <li><b>Click</b> or <b>Space</b> to swing. Hold it to charge a bigger yeet</li>
+        <li><b>M</b> to mute</li>
+      </ul>
+      <ul class="how touch-only">
+        <li>Drag on the left to walk</li>
+        <li>Drag on the right to look around</li>
+        <li>Tap <b>YEET</b> to swing, hold it to charge</li>
+      </ul>
+      <button id="start" type="button">Start yeeting</button>
+    </div>
+
+    <script src="vendor/three.min.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
