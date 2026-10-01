@@ -1,0 +1,14 @@
+{
+  "title": "STREET YEET",
+  "description": "Walk a low-poly city block and send anyone, anything, a hilariously unrealistic distance with one gigantic fist.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "WASD or arrow keys to walk, Shift to run",
+    "Mouse to look around (click to grab the mouse), Q and E to turn the camera",
+    "Click or Space to swing; hold to charge a bigger yeet",
+    "On touch screens, drag left to walk, drag right to look, and hold YEET to charge",
+    "M to mute"
+  ],
+  "tags": ["3d", "action", "silly"]
+}
