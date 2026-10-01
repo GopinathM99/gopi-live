@@ -12,7 +12,7 @@
   const ROAD_OUT = 52;
   const CHARGE_TIME = 1.1; // seconds to a full charge
   const SWING_TIME = 0.42;
-  const IMPACT_AT = 0.07; // seconds into the swing when the fist connects
+  const IMPACT_AT = 0.07; // seconds into the swing when the hammer connects
   const GONE_DIST = 210; // flying things this far away become a twinkle
   const RESPAWN_PROP = 7;
   const RESPAWN_BUILDING = 14;
@@ -443,7 +443,7 @@
     return g;
   }
 
-  // The hero: a stocky brawler with one normal arm and one ludicrous fist.
+  // The hero: a stocky brawler swinging a ludicrously big hammer.
   function buildHero() {
     const g = new T.Group();
     const body = new T.Group();
@@ -466,19 +466,26 @@
     const armL = limb(0.75, 1.0, 0, torso);
     part(box(0.3, 0.85, 0.32), 0xe0ac69, 0, -0.38, 0, armL);
     part(box(0.32, 0.3, 0.32), 0xe0ac69, 0, -0.88, 0, armL);
-    const armR = limb(-0.8, 1.05, 0, torso);
-    part(box(0.48, 0.7, 0.5), 0xe0ac69, 0, -0.3, 0, armR);
-    part(box(0.56, 0.6, 0.56), 0xd59a5c, 0, -0.85, 0, armR);
-    const fist = new T.Group();
-    fist.position.set(0, -1.55, 0.05);
-    armR.add(fist);
-    const fistMat = new T.MeshLambertMaterial({ color: 0xe0ac69, emissive: 0x000000 });
-    const knuckles = new T.Mesh(ico(0.85, 1), fistMat);
-    knuckles.scale.set(1, 0.95, 1.1);
-    knuckles.castShadow = true;
-    fist.add(knuckles);
-    part(box(0.5, 0.18, 0.5), 0xef4444, 0, 0.72, 0, fist); // wristband
-    g.userData = { body, torso, legL, legR, armL, armR, fist, fistMat };
+    const armR = limb(-0.75, 1.0, 0, torso);
+    part(box(0.3, 0.85, 0.32), 0xe0ac69, 0, -0.38, 0, armR);
+    part(box(0.34, 0.32, 0.34), 0xe0ac69, 0, -0.9, 0, armR); // fist round the grip
+    // The hammer hangs off the fist with its handle along local -y; the
+    // animation below rotates it between rest, wind-up and strike poses.
+    const hammer = new T.Group();
+    hammer.position.set(0, -0.92, 0);
+    armR.add(hammer);
+    part(cyl(0.09, 0.09, 2.5, 6), 0x7c4a1e, 0, -1.05, 0, hammer);
+    part(cyl(0.12, 0.12, 0.5, 6), 0xef4444, 0, 0.05, 0, hammer); // grip tape
+    const head = new T.Group();
+    head.position.set(0, -2.3, 0);
+    hammer.add(head);
+    const headMat = new T.MeshLambertMaterial({ color: 0x9ca3af, emissive: 0x000000 });
+    const block = new T.Mesh(box(0.95, 0.95, 1.6), headMat);
+    block.castShadow = true;
+    head.add(block);
+    part(box(1.05, 1.05, 0.18), 0x4b5563, 0, 0, 0.72, head);
+    part(box(1.05, 1.05, 0.18), 0x4b5563, 0, 0, -0.72, head);
+    g.userData = { body, torso, legL, legR, armL, armR, hammer, head, headMat };
     return g;
   }
 
@@ -670,7 +677,7 @@
     addProp("pigeon", buildPigeon, "A pigeon", cx + rand(-2.5, 2.5), cz + rand(-2.5, 2.5), rand(0, 6), 0.2, 0.5, 0.2);
   }
 
-  // Walkers follow a square loop and panic when the fist comes out.
+  // Walkers follow a square loop and panic when the hammer comes out.
   const RINGS = [35.5, 54.5, 9];
   for (let i = 0; i < 16; i++) {
     const ring = RINGS[i % 3];
@@ -738,7 +745,7 @@
     charge: 0,
     swingT: -1,
     swingCharge: 0,
-    windAngle: 0,
+    windPose: null,
     hitDone: false,
   };
   let camYaw = Math.PI / 2;
@@ -1046,7 +1053,7 @@
     showBanner();
   }
 
-  function fistPoint(out) {
+  function hammerPoint(out) {
     const fx = Math.sin(player.yaw);
     const fz = Math.cos(player.yaw);
     return out.set(player.pos.x + fx * 2.0, 1.3, player.pos.z + fz * 2.0);
@@ -1055,7 +1062,7 @@
   function impact(power) {
     const fx = Math.sin(player.yaw);
     const fz = Math.cos(player.yaw);
-    const fist = fistPoint(new T.Vector3());
+    const hit = hammerPoint(new T.Vector3());
     const reach = 2.4 + power * 2.8;
     let hits = 0;
     for (const e of entities) {
@@ -1064,13 +1071,13 @@
       let dz;
       if (e.collider) {
         const c = e.collider;
-        dx = clamp(fist.x, c.minX, c.maxX) - fist.x;
-        dz = clamp(fist.z, c.minZ, c.maxZ) - fist.z;
+        dx = clamp(hit.x, c.minX, c.maxX) - hit.x;
+        dz = clamp(hit.z, c.minZ, c.maxZ) - hit.z;
         if (Math.hypot(dx, dz) > reach) continue;
       } else {
         const p = e.group.position;
-        dx = p.x - fist.x;
-        dz = p.z - fist.z;
+        dx = p.x - hit.x;
+        dz = p.z - hit.z;
         if (Math.hypot(dx, dz) - e.radius > reach) continue;
         // Only things in front of the hero, give or take.
         const px = p.x - player.pos.x;
@@ -1084,7 +1091,7 @@
     sfx.whoosh(power);
     if (hits > 0) {
       sfx.thump(power);
-      burst(fist, 14 + Math.round(power * 16), power);
+      burst(hit, 14 + Math.round(power * 16), power);
       shake = 0.35 + power * 0.6;
       hitStop = 0.05 + power * 0.07;
       fovKick = 6 + power * 10;
@@ -1399,33 +1406,40 @@
     H.armL.rotation.x = -sw * 0.6;
     H.body.position.y = moving > 0.1 ? Math.abs(Math.cos(player.walk)) * 0.12 : 0;
 
-    let arm = sw * 0.15; // the big arm swings a little as he walks
-    let twist = 0;
-    let fistScale = 1;
+    // Hammer poses as [arm angle, hammer angle relative to the arm, torso lean].
+    // Rest: on the shoulder. Wind-up: raised overhead, head hanging behind.
+    // Strike: an overhead smash, head slamming down in front.
+    const REST = [-0.4 + sw * 0.1, 2.9, 0];
+    const WIND = [-2.8, 3.85, -0.18];
+    const STRIKE = [-1.1, 0.17, 0.3];
+    const mix = (p, q, k) => p.map((v, i) => v + (q[i] - v) * k);
+    let pose = REST;
+    let headScale = 1;
     if (player.charging) {
       const wobble = Math.sin(performance.now() * 0.05) * 0.04 * c;
-      arm = 0.6 + c * 1.0 + wobble;
-      twist = -0.35 - c * 0.35;
-      fistScale = 1 + c * 0.45;
-      player.windAngle = arm;
+      pose = mix(REST, WIND, 0.35 + c * 0.65);
+      pose[0] += wobble;
+      headScale = 1 + c * 0.45;
+      player.windPose = pose;
     } else if (player.swingT >= 0) {
       const t = player.swingT;
-      const strike = Math.min(1, t / IMPACT_AT);
-      const ease = 1 - Math.pow(1 - strike, 3);
-      const from = player.windAngle || 0.6;
-      const peak = -2.1;
-      if (t <= IMPACT_AT) arm = from + (peak - from) * ease;
-      else arm = peak + (0 - peak) * Math.min(1, (t - IMPACT_AT) / (SWING_TIME - IMPACT_AT)) ** 2;
-      twist = t <= IMPACT_AT ? -0.5 + 0.9 * ease : 0.4 * (1 - (t - IMPACT_AT) / (SWING_TIME - IMPACT_AT));
-      fistScale = 1 + player.swingCharge * 0.45 * (1 - Math.min(1, t / SWING_TIME));
+      const from = player.windPose || mix(REST, WIND, 0.35);
+      if (t <= IMPACT_AT) {
+        pose = mix(from, STRIKE, 1 - Math.pow(1 - t / IMPACT_AT, 3));
+      } else {
+        const k = Math.min(1, (t - IMPACT_AT) / (SWING_TIME - IMPACT_AT));
+        // Hold the smash for a beat, then heave it back onto the shoulder.
+        pose = mix(STRIKE, REST, Math.max(0, (k - 0.3) / 0.7) ** 2);
+      }
+      headScale = 1 + player.swingCharge * 0.45 * (1 - Math.min(1, t / SWING_TIME));
     } else {
-      player.windAngle = 0;
+      player.windPose = null;
     }
-    H.armR.rotation.x = arm;
-    H.armR.rotation.z = player.swingT >= 0 && player.swingT <= IMPACT_AT ? 0.2 : 0;
-    H.torso.rotation.y = twist;
-    H.fist.scale.setScalar(fistScale);
-    H.fistMat.emissive.setRGB(c * 0.6, c * 0.25, 0);
+    H.armR.rotation.x = pose[0];
+    H.hammer.rotation.x = pose[1];
+    H.torso.rotation.x = pose[2];
+    H.head.scale.setScalar(headScale);
+    H.headMat.emissive.setRGB(c * 0.6, c * 0.25, 0);
 
     hero.position.copy(player.pos);
     hero.rotation.y = player.yaw;
