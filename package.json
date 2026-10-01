@@ -1,0 +1,14 @@
+{
+  "name": "gopi-live",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter portal dev",
+    "build": "pnpm --filter portal build",
+    "start": "pnpm --filter portal start",
+    "typecheck": "pnpm --filter portal typecheck"
+  }
+}

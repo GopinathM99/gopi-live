@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# game bundles are copied into the portal at build time from games/
+apps/portal/public/games/
+
+# env and local tooling
+.env
+.env*.local
+.vercel/
+.DS_Store
+*.log
+coverage/
