@@ -1,0 +1,12 @@
+{
+  "title": "2048",
+  "description": "Slide the tiles, merge matching numbers, and build a 2048 tile.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Arrow keys or WASD to slide the tiles",
+    "Swipe to slide on touch screens",
+    "N for a new game, Space or tap to restart after game over"
+  ],
+  "tags": ["puzzle", "classic"]
+}

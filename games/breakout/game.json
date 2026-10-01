@@ -1,0 +1,12 @@
+{
+  "title": "Breakout",
+  "description": "Bounce the ball off your paddle and smash every brick.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Move the mouse, or left and right arrows (A and D), to steer the paddle",
+    "Drag to steer on touch screens",
+    "Space or tap to launch the ball and pause, P or Esc to pause"
+  ],
+  "tags": ["arcade", "classic"]
+}

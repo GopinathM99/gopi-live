@@ -1,0 +1,86 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #0b0f14;
+  color: #e7e9ee;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hud {
+  display: flex;
+  gap: 24px;
+}
+
+#board {
+  --size: min(90vw, 78vh);
+  --gap: calc(var(--size) * 0.025);
+  width: var(--size);
+  height: var(--size);
+  box-sizing: border-box;
+  padding: var(--gap);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--gap);
+  background: #111823;
+  border-radius: 8px;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #1a2433;
+  font-weight: 800;
+  font-size: calc(var(--size) * 0.1);
+  color: #0b0f14;
+}
+
+.cell.long {
+  font-size: calc(var(--size) * 0.075);
+}
+
+.cell.longer {
+  font-size: calc(var(--size) * 0.058);
+}
+
+.cell.new {
+  animation: appear 140ms ease-out;
+}
+
+.cell.merged {
+  animation: pop 160ms ease-out;
+}
+
+@keyframes appear {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+#message {
+  margin: 0;
+  min-height: 1.5em;
+  color: #9aa1b2;
+  text-align: center;
+}
