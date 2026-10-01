@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blocks</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="hud">
+      <span>Score <b id="score">0</b></span>
+      <span>Lines <b id="lines">0</b></span>
+      <span>Level <b id="level">1</b></span>
+      <span>Best <b id="best">0</b></span>
+    </div>
+    <canvas id="board" width="336" height="480"></canvas>
+    <div class="pad" aria-label="Touch controls">
+      <button data-action="left" aria-label="Move left">◀</button>
+      <button data-action="rotate" aria-label="Rotate">⟳</button>
+      <button data-action="right" aria-label="Move right">▶</button>
+      <button data-action="down" aria-label="Soft drop">▼</button>
+      <button data-action="drop" aria-label="Hard drop">⤓</button>
+      <button data-action="pause" aria-label="Pause">❚❚</button>
+    </div>
+    <p id="message">Press Enter or tap to start</p>
+    <script src="game.js"></script>
+  </body>
+</html>

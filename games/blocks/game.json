@@ -1,0 +1,14 @@
+{
+  "title": "Blocks",
+  "description": "Rotate the falling blocks and clear full lines before the stack hits the top.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Left and right arrows (or A and D) to move",
+    "Up arrow, W or X to rotate",
+    "Down arrow to soft drop, Space to hard drop",
+    "Enter to start, P or Esc to pause",
+    "On touch screens, use the buttons under the board and tap the board to rotate"
+  ],
+  "tags": ["puzzle", "arcade", "classic"]
+}
