@@ -1,0 +1,12 @@
+{
+  "title": "Snake",
+  "description": "Eat the food, grow longer, and don't bite your own tail.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Arrow keys or WASD to steer",
+    "Swipe to steer on touch screens",
+    "Space or tap to pause and restart"
+  ],
+  "tags": ["arcade", "classic"]
+}
