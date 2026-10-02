@@ -38,8 +38,60 @@ body {
   pointer-events: none;
 }
 
-.hud b {
+.hud b,
+.hud em {
   color: #facc15;
+  font-style: normal;
+}
+
+.hud-goal {
+  color: #bae6fd;
+  font-weight: 700;
+}
+
+.buffs {
+  position: fixed;
+  left: 50%;
+  bottom: 36px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: min(92vw, 520px);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.buff {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(11, 15, 20, 0.62);
+  border: 2px solid currentColor;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.toast {
+  position: fixed;
+  top: 11%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(11, 15, 20, 0.72);
+  color: #facc15;
+  font-size: 16px;
+  font-weight: 800;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 4;
+}
+
+.toast.show {
+  opacity: 1;
 }
 
 .mute {
@@ -156,7 +208,8 @@ body {
 }
 
 .stick,
-.yeet-btn {
+.yeet-btn,
+.weapon-btn {
   display: none;
 }
 
@@ -208,9 +261,28 @@ body.touch .yeet-btn.down {
   transform: scale(0.92);
 }
 
+body.touch .weapon-btn {
+  display: block;
+  position: fixed;
+  right: 34px;
+  bottom: 158px;
+  width: 80px;
+  height: 42px;
+  border: 3px solid #7c2d12;
+  border-radius: 999px;
+  background: #fde68a;
+  color: #431407;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  touch-action: none;
+  z-index: 3;
+}
+
 .overlay {
   position: fixed;
   inset: 0;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -224,7 +296,8 @@ body.touch .yeet-btn.down {
   display: none;
 }
 
-.overlay h1 {
+.overlay h1,
+.overlay h2 {
   margin: 0;
   font-size: clamp(44px, 13vw, 96px);
   font-weight: 900;
@@ -232,6 +305,19 @@ body.touch .yeet-btn.down {
   color: #facc15;
   -webkit-text-stroke: 3px #7c2d12;
   text-shadow: 0 6px 0 #000;
+}
+
+.overlay h2 {
+  font-size: clamp(36px, 10vw, 72px);
+}
+
+.save-line,
+.unlock {
+  max-width: 38rem;
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #e2e8f0;
 }
 
 .tagline {
@@ -261,7 +347,8 @@ body.touch .touch-only {
   display: block;
 }
 
-#start {
+#start,
+#level-next {
   padding: 12px 28px;
   border: 3px solid #7c2d12;
   border-radius: 12px;
@@ -270,4 +357,27 @@ body.touch .touch-only {
   font-size: 20px;
   font-weight: 900;
   cursor: pointer;
+}
+
+.replay {
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #bae6fd;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .hud {
+    max-width: calc(100% - 58px);
+    font-size: 12px;
+    gap: 4px 8px;
+  }
+
+  .buffs {
+    bottom: 28px;
+  }
 }
