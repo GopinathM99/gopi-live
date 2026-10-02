@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import GameFrame from "@/components/GameFrame";
 import { getAllGames, getGame } from "@/lib/games";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -26,15 +27,7 @@ export default async function PlayPage({ params }: Props) {
         ← All games
       </Link>
       <h1>{game.title}</h1>
-      <div className="frame">
-        {/* Games run sandboxed: scripts only, no access to the portal's origin. */}
-        <iframe
-          src={game.url}
-          title={game.title}
-          sandbox="allow-scripts allow-pointer-lock"
-          allow="fullscreen; gamepad; autoplay"
-        />
-      </div>
+      <GameFrame src={game.url} title={game.title} />
       <section className="controls">
         <h2>Controls</h2>
         <ul>
