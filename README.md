@@ -26,6 +26,13 @@ pnpm build      # production build of the portal
 pnpm typecheck
 ```
 
+## Home page photo
+
+The hero shows a placeholder portrait until a photo is set. Drop a square
+image (640x640 or larger) into `apps/portal/public/`, e.g.
+`public/gopinath.jpg`, then set `photo: "/gopinath.jpg"` in
+`apps/portal/lib/site.ts`. The same file picks the featured game.
+
 ## Adding a game
 
 1. Create `games/<slug>/` (lowercase letters, digits and dashes).

@@ -22,7 +22,7 @@ export default async function PlayPage({ params }: Props) {
   if (!game) notFound();
 
   return (
-    <div className="play">
+    <div className="container play">
       <Link href="/" className="back">
         ← All games
       </Link>
