@@ -4,16 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>STREET YEET</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23facc15'/%3E%3Crect x='14' y='6' width='4' height='16' fill='%237c4a1e'/%3E%3Crect x='8' y='4' width='16' height='8' rx='1' fill='%239ca3af'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <canvas id="view"></canvas>
 
     <div class="hud">
+      <span class="hud-level">Lv <b id="level-num">1</b> <em id="level-name">Warm-up</em></span>
+      <span class="hud-goal" id="goal">Yeet 0/5</span>
       <span>Yeets <b id="yeets">0</b></span>
       <span>Total <b id="total">0 m</b></span>
       <span>Best <b id="best">0 m</b></span>
+      <span>Weapon <b id="weapon-name">Yeetmallet</b></span>
     </div>
+    <div id="buffs" class="buffs"></div>
     <button id="mute" class="mute" type="button" aria-label="Toggle sound">🔊</button>
 
     <div id="banner" class="banner">
@@ -21,28 +26,43 @@
       <div class="banner-detail"></div>
       <div class="banner-where"></div>
     </div>
+    <div id="toast" class="toast"></div>
 
     <div id="charge" class="charge"><div id="charge-fill"></div></div>
     <p id="hint" class="hint"></p>
 
     <div id="stick" class="stick"><div id="knob" class="knob"></div></div>
+    <button id="weapon-btn" class="weapon-btn" type="button">SWAP</button>
     <button id="yeet-btn" class="yeet-btn" type="button">YEET</button>
 
     <div id="overlay" class="overlay">
       <h1>STREET YEET</h1>
-      <p class="tagline">One gigantic hammer. One city block. Everything must go.</p>
+      <p class="tagline">One city block. A climbing list of terrible ideas. An arsenal.</p>
+      <p id="save-line" class="save-line"></p>
       <ul class="how desktop-only">
         <li><b>WASD</b> or arrows to walk, <b>Shift</b> to run</li>
         <li><b>Mouse</b> to look around, <b>Q</b>/<b>E</b> to turn the camera</li>
         <li><b>Click</b> or <b>Space</b> to swing. Hold it to charge a bigger yeet</li>
+        <li><b>1–4</b> or the <b>scroll wheel</b> to swap weapons. More unlock as you clear levels</li>
+        <li>Walk into glowing pickups: <b>turbo</b>, <b>mega yeet</b>, <b>slow-mo</b>, <b>magnet</b></li>
         <li><b>M</b> to mute</li>
       </ul>
       <ul class="how touch-only">
         <li>Drag on the left to walk</li>
         <li>Drag on the right to look around</li>
-        <li>Tap <b>YEET</b> to swing, hold it to charge</li>
+        <li>Hold <b>YEET</b> to charge a swing</li>
+        <li>Tap <b>SWAP</b> to change weapons</li>
+        <li>Walk into the glowing pickups</li>
       </ul>
       <button id="start" type="button">Start yeeting</button>
+      <button id="replay" type="button" class="replay" hidden>Replay from level 1</button>
+    </div>
+
+    <div id="level-screen" class="overlay hidden">
+      <h2 id="level-heading">LEVEL CLEARED</h2>
+      <p id="level-detail" class="tagline"></p>
+      <p id="level-unlock" class="unlock"></p>
+      <button id="level-next" type="button">Next level</button>
     </div>
 
     <script src="vendor/three.min.js"></script>

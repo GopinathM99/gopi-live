@@ -16,6 +16,8 @@
   const GONE_DIST = 210; // flying things this far away become a twinkle
   const RESPAWN_PROP = 7;
   const RESPAWN_BUILDING = 14;
+  const POWERUP_DURATION = 8; // seconds power-ups last
+  const POWERUP_SPAWN_INTERVAL = 12; // seconds between power-up spawns
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
@@ -27,19 +29,42 @@
   };
 
   // The portal loads games in a sandboxed iframe with an opaque origin,
-  // where localStorage throws, so the best yeet falls back to memory.
+  // where localStorage throws, so records fall back to memory for the session.
+  const memory = { best: null, progress: null };
   const storage = {
     get() {
       try {
-        return JSON.parse(localStorage.getItem("street-yeet.best")) || null;
+        const raw = localStorage.getItem("street-yeet.best");
+        if (raw) return JSON.parse(raw);
       } catch {
-        return null;
+        /* opaque origin */
       }
+      return memory.best;
     },
     set(value) {
+      memory.best = value;
       try {
         localStorage.setItem("street-yeet.best", JSON.stringify(value));
-      } catch {}
+      } catch {
+        /* opaque origin */
+      }
+    },
+    getProgress() {
+      try {
+        const raw = JSON.parse(localStorage.getItem("street-yeet.progress") || "null");
+        if (raw && typeof raw.cleared === "number" && raw.cleared >= 0) return raw;
+      } catch {
+        /* opaque origin */
+      }
+      return memory.progress || { cleared: 0 };
+    },
+    setProgress(value) {
+      memory.progress = value;
+      try {
+        localStorage.setItem("street-yeet.progress", JSON.stringify(value));
+      } catch {
+        /* opaque origin */
+      }
     },
   };
 
@@ -471,22 +496,254 @@
     part(box(0.34, 0.32, 0.34), 0xe0ac69, 0, -0.9, 0, armR); // fist round the grip
     // The hammer hangs off the fist with its handle along local -y; the
     // animation below rotates it between rest, wind-up and strike poses.
+    // Weapon socket. The mesh hangs off the fist along local -y and is
+    // swapped in by mountWeapon. Same swing poses for every weapon.
     const hammer = new T.Group();
     hammer.position.set(0, -0.92, 0);
     armR.add(hammer);
-    part(cyl(0.09, 0.09, 2.5, 6), 0x7c4a1e, 0, -1.05, 0, hammer);
-    part(cyl(0.12, 0.12, 0.5, 6), 0xef4444, 0, 0.05, 0, hammer); // grip tape
-    const head = new T.Group();
-    head.position.set(0, -2.3, 0);
-    hammer.add(head);
-    const headMat = new T.MeshLambertMaterial({ color: 0x9ca3af, emissive: 0x000000 });
-    const block = new T.Mesh(box(0.95, 0.95, 1.6), headMat);
-    block.castShadow = true;
-    head.add(block);
-    part(box(1.05, 1.05, 0.18), 0x4b5563, 0, 0, 0.72, head);
-    part(box(1.05, 1.05, 0.18), 0x4b5563, 0, 0, -0.72, head);
-    g.userData = { body, torso, legL, legR, armL, armR, hammer, head, headMat };
+    g.userData = { body, torso, legL, legR, armL, armR, hammer, head: hammer, headMat: null };
     return g;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Weapons, pickups, levels
+  //
+  // Weapon `power` bends the comic distance curve (1 matches the old hammer).
+  // `reach` / `reachGrow` are metres of swing. `arc` is the minimum forward
+  // dot; lower means a wider sweep. `unlockAfter` is levels cleared.
+  // ---------------------------------------------------------------------------
+  const WEAPON_ORDER = ["hammer", "broom", "sign", "fish"];
+  const WEAPONS = {
+    hammer: {
+      name: "Yeetmallet",
+      slot: 1,
+      unlockAfter: 0,
+      reach: 2.4,
+      reachGrow: 2.8,
+      power: 1,
+      distMul: 1,
+      swingTime: 0.42,
+      chargeTime: 1.1,
+      arc: 0.15,
+      vMul: 1,
+      hMul: 1,
+      critBonus: 0.1,
+      lunge: 1,
+      chain: 0,
+      glow: [0.6, 0.25, 0],
+      build(root) {
+        part(cyl(0.09, 0.09, 2.5, 6), 0x7c4a1e, 0, -1.05, 0, root);
+        part(cyl(0.12, 0.12, 0.5, 6), 0xef4444, 0, 0.05, 0, root);
+        const head = new T.Group();
+        head.position.set(0, -2.3, 0);
+        root.add(head);
+        const headMat = new T.MeshLambertMaterial({ color: 0x9ca3af, emissive: 0x000000 });
+        const block = new T.Mesh(box(0.95, 0.95, 1.6), headMat);
+        block.castShadow = true;
+        head.add(block);
+        part(box(1.05, 1.05, 0.18), 0x4b5563, 0, 0, 0.72, head);
+        part(box(1.05, 1.05, 0.18), 0x4b5563, 0, 0, -0.72, head);
+        return { head, headMat };
+      },
+    },
+    broom: {
+      name: "The Sweep",
+      slot: 2,
+      unlockAfter: 2,
+      reach: 3.05,
+      reachGrow: 1.5,
+      power: 0.62,
+      distMul: 0.85,
+      swingTime: 0.26,
+      chargeTime: 0.7,
+      arc: -0.25,
+      vMul: 0.82,
+      hMul: 1.2,
+      critBonus: 0,
+      lunge: 0.65,
+      chain: 0,
+      glow: [0.75, 0.6, 0.1],
+      build(root) {
+        part(cyl(0.055, 0.07, 2.35, 5), 0xa16207, 0, -1.15, 0, root);
+        const head = new T.Group();
+        head.position.set(0, -2.25, 0);
+        root.add(head);
+        const headMat = new T.MeshLambertMaterial({ color: 0xe7d3a1, emissive: 0x000000 });
+        const bristles = new T.Mesh(box(0.9, 0.5, 0.34), headMat);
+        bristles.castShadow = true;
+        head.add(bristles);
+        part(box(0.96, 0.12, 0.38), 0x78350f, 0, 0.24, 0, head);
+        return { head, headMat };
+      },
+    },
+    sign: {
+      name: "Stop Sign",
+      slot: 3,
+      unlockAfter: 4,
+      reach: 2.35,
+      reachGrow: 2.2,
+      power: 1.28,
+      distMul: 1.05,
+      swingTime: 0.5,
+      chargeTime: 1.25,
+      arc: 0.22,
+      vMul: 1.55,
+      hMul: 0.82,
+      critBonus: 0.04,
+      lunge: 1.15,
+      chain: 0,
+      glow: [0.85, 0.08, 0.05],
+      build(root) {
+        part(cyl(0.06, 0.07, 2.05, 6), 0x64748b, 0, -1.0, 0, root);
+        const head = new T.Group();
+        head.position.set(0, -2.15, 0);
+        root.add(head);
+        const headMat = new T.MeshLambertMaterial({ color: 0xdc2626, emissive: 0x000000 });
+        const sign = new T.Mesh(cyl(0.72, 0.72, 0.12, 8), headMat);
+        sign.castShadow = true;
+        sign.rotation.x = Math.PI / 2;
+        sign.rotation.y = Math.PI / 8;
+        head.add(sign);
+        part(box(0.7, 0.14, 0.16), 0xf8fafc, 0, 0, 0, head);
+        return { head, headMat };
+      },
+    },
+    fish: {
+      name: "Legendary Carp",
+      slot: 4,
+      unlockAfter: 6,
+      reach: 2.7,
+      reachGrow: 2.3,
+      power: 1,
+      distMul: 1.35,
+      swingTime: 0.34,
+      chargeTime: 0.95,
+      arc: 0.02,
+      vMul: 1.1,
+      hMul: 1.08,
+      critBonus: 0.06,
+      lunge: 0.9,
+      chain: 0.45,
+      glow: [0.15, 0.45, 0.85],
+      build(root) {
+        part(cyl(0.16, 0.28, 1.4, 6), 0xf97316, 0, -1.2, 0, root);
+        part(cone(0.3, 0.55, 4), 0xea580c, 0, -0.35, 0, root);
+        const head = new T.Group();
+        head.position.set(0, -2.05, 0);
+        root.add(head);
+        const headMat = new T.MeshLambertMaterial({ color: 0xfacc15, emissive: 0x000000 });
+        const snout = new T.Mesh(cone(0.24, 0.6, 6), headMat);
+        snout.rotation.x = Math.PI;
+        snout.castShadow = true;
+        head.add(snout);
+        part(box(0.1, 0.1, 0.1), 0x111827, 0.14, 0.08, 0.1, head);
+        part(box(0.1, 0.1, 0.1), 0x111827, -0.14, 0.08, 0.1, head);
+        return { head, headMat };
+      },
+    },
+  };
+
+  // Pickup tuning. Durations are real seconds. Mega multiplies the comic
+  // distance after the exponent so it doesn't run away from the joke curve.
+  const PICKUPS = {
+    speed: { label: "TURBO", name: "Turbo Sneakers", color: "#4ade80", hex: 0x4ade80, seconds: 8 },
+    mega: { label: "MEGA", name: "Mega Yeet", color: "#fb923c", hex: 0xfb923c, seconds: 8 },
+    slowmo: { label: "SLOW-MO", name: "Slow-Mo Syrup", color: "#60a5fa", hex: 0x60a5fa, seconds: 7 },
+    magnet: { label: "MAGNET", name: "Yeet Magnet", color: "#c084fc", hex: 0xc084fc, seconds: 8 },
+  };
+  const SPEED_MUL = 1.75;
+  const MEGA_DIST = 2.2;
+  const MEGA_LAUNCH = 1.18;
+  const SLOWMO_SCALE = 0.45;
+  const MAGNET_RADIUS = 14;
+  const MAGNET_PULL = 11;
+  const PICKUP_RADIUS = 1.7;
+  const PICKUP_INTERVAL = 12;
+  const PICKUP_CAP = 2;
+  const PICKUP_ORDER = ["speed", "mega", "slowmo", "magnet"];
+
+  const CLEAR_LINES = [
+    "The block will never be the same, and it wasn't great before.",
+    "Somewhere a pigeon is filing a complaint.",
+    "City planning has left the chat.",
+    "That was deeply unnecessary. Perfect.",
+    "Insurance called. They're crying.",
+    "A librarian three towns over just felt that.",
+  ];
+
+  // Eight authored levels, then an endless loop that keeps raising the ask
+  // and the rudeness of the traffic.
+  const CAMPAIGN = [
+    { name: "Warm-up", blurb: "Yeet 5 things. The fountain has had this coming.", goal: "yeets", target: 5 },
+    { name: "Beat the Clock", blurb: "Yeet 8 things before the block gets bored.", goal: "timer", target: 8, seconds: 75 },
+    { name: "Across Town", blurb: "Send somebody at least 8 km. A little charge goes a long way.", goal: "distance", target: 8 },
+    {
+      name: "Rush Hour",
+      blurb: "Yeet 10 things while traffic is feeling spicy.",
+      goal: "yeets",
+      target: 10,
+      diff: { walkers: 1.28, cars: 1.4, sprinters: 3 },
+    },
+    {
+      name: "State Lines",
+      blurb: "One yeet of 80 km. Hold the swing and mean it.",
+      goal: "distance",
+      target: 80,
+      diff: { walkers: 1.15, cars: 1.2, sprinters: 3 },
+    },
+    {
+      name: "Stampede",
+      blurb: "Yeet 12 things in 60 seconds. They will not cooperate.",
+      goal: "timer",
+      target: 12,
+      seconds: 60,
+      diff: { walkers: 1.45, cars: 1.25, sprinters: 5, bouncers: 2 },
+    },
+    {
+      name: "Heavyweight",
+      blurb: "Yeet 2 whole buildings. Walk up and introduce yourself.",
+      goal: "buildings",
+      target: 2,
+      diff: { walkers: 1.2, cars: 1.15, bouncers: 2 },
+    },
+    {
+      name: "Block Legend",
+      blurb: "Rack up 200 km this level. Style is mandatory.",
+      goal: "total",
+      target: 200,
+      diff: { walkers: 1.4, cars: 1.35, sprinters: 5, bouncers: 3 },
+    },
+  ];
+
+  function levelDef(n) {
+    if (n <= CAMPAIGN.length) return CAMPAIGN[n - 1];
+    const extra = n - CAMPAIGN.length;
+    const diff = {
+      walkers: 1.35 + extra * 0.07,
+      cars: 1.25 + extra * 0.05,
+      sprinters: Math.min(6, 4 + Math.floor(extra / 2)),
+      bouncers: Math.min(3, 2 + Math.floor(extra / 3)),
+    };
+    const cycle = extra % 3;
+    if (cycle === 1) {
+      return { name: "Farther", blurb: "One ridiculous yeet. You know the drill.", goal: "distance", target: 40 * extra, diff };
+    }
+    if (cycle === 2) {
+      return {
+        name: "Overtime",
+        blurb: "The clock is rude and so are the joggers.",
+        goal: "timer",
+        target: 8 + extra,
+        seconds: Math.max(45, 80 - extra * 2),
+        diff,
+      };
+    }
+    return { name: "Still Going", blurb: "The block refuses to learn.", goal: "yeets", target: 8 + extra * 2, diff };
+  }
+
+  function fmtClock(seconds) {
+    const t = Math.max(0, Math.ceil(seconds));
+    return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
   }
 
   // ---------------------------------------------------------------------------
@@ -565,6 +822,7 @@
       ai: opts.ai || null,
       collider: null,
       phase: Math.random() * 10,
+      homeScale: opts.homeScale || 1,
     };
     group.position.set(opts.x, 0, opts.z);
     group.rotation.y = e.home.yaw;
@@ -698,7 +956,7 @@
     const ring = i < 2 ? 34.5 : 55.5;
     const s = rand(0, 8 * ring);
     const [x, z] = perim(ring, s);
-    addEntity("dog", buildDog(), {
+    const dog = addEntity("dog", buildDog(), {
       name: pick(["A very good dog", "A corgi-adjacent dog", "Sir Barksalot", "Biscuit the dog"]),
       x,
       z,
@@ -707,7 +965,45 @@
       mass: 0.6,
       ai: { ring, s, dir: Math.random() < 0.5 ? 1 : -1, speed: rand(2.4, 3.2), panic: 0 },
     });
+    dog.ai.speedBase = dog.ai.speed;
   }
+
+  // Extra citizens stay benched until a level asks for them, so the early
+  // block isn't suddenly full of joggers and door staff.
+  const sprinters = [];
+  const bouncers = [];
+  function makeRoster(list, count, role, names, mass, homeScale) {
+    for (let i = 0; i < count; i++) {
+      const group = buildPerson();
+      if (role === "sprinter") part(box(0.66, 0.22, 0.4), 0xfacc15, 0, 1.42, 0, group);
+      if (role === "bouncer") part(box(0.72, 0.3, 0.44), 0x111827, 0, 1.38, 0, group);
+      const e = addEntity("person", group, {
+        name: names[i % names.length],
+        x: 0,
+        z: 0,
+        radius: role === "bouncer" ? 0.55 : 0.4,
+        height: 2.2,
+        mass,
+        homeScale,
+        ai: {
+          ring: 35.5,
+          s: 0,
+          dir: 1,
+          speed: role === "bouncer" ? 1.45 : 2.35,
+          panic: 0,
+          role,
+        },
+      });
+      e.ai.speedBase = e.ai.speed;
+      e.state = "benched";
+      group.visible = false;
+      group.position.y = -30;
+      group.scale.setScalar(homeScale);
+      list.push(e);
+    }
+  }
+  makeRoster(sprinters, 6, "sprinter", ["Jogger Jess", "Sprint Steve", "Cardio Karen", "Zoom Todd", "Dash Doris", "Laps Larry"], 0.55, 1);
+  makeRoster(bouncers, 3, "bouncer", ["Bouncer Derek", "Door guy Big Mike", "The velvet rope"], 2.4, 1.22);
 
   // Cars lap the road, clockwise on the inner lane, the other way outside.
   const LANES = [
@@ -718,7 +1014,7 @@
     const lane = LANES[i % 2];
     const s = (i >> 1) * 2 * lane.h + rand(0, lane.h);
     const [x, z] = perim(lane.h, s);
-    addEntity("car", buildCar(), {
+    const car = addEntity("car", buildCar(), {
       name: pick(["A sedan", "Someone's car", "A taxi", "A hatchback", "A double-parked SUV"]),
       x,
       z,
@@ -727,14 +1023,29 @@
       mass: 8,
       ai: { lane, s, speed: 0, max: rand(9, 13), honked: 0, blocked: 0 },
     });
+    car.ai.maxBase = car.ai.max;
   }
 
   // ---------------------------------------------------------------------------
   // The player
   // ---------------------------------------------------------------------------
+  const savedProgress = storage.getProgress();
+  let cleared = savedProgress.cleared || 0;
+  let levelNumber = Math.max(1, cleared + 1);
+  let levelLock = false;
+  let levelOutcome = "clear";
+  let progress = { yeets: 0, bestKm: 0, totalKm: 0, buildings: 0, timeLeft: 0 };
+  const buffs = { speed: 0, mega: 0, slowmo: 0, magnet: 0 };
+  const pickups = [];
+  let pickupTimer = 4;
+  let weapon = null;
+  let weaponId = "hammer";
+  let toastTimer = 0;
+
   const hero = buildHero();
   scene.add(hero);
   const H = hero.userData;
+  mountWeapon("hammer");
   const player = {
     pos: new T.Vector3(0, 0, -35.5),
     yaw: Math.PI / 2,
@@ -998,11 +1309,14 @@
     banner.classList.add("show");
   }
 
-  function yeetDistanceKm(e, power, crit) {
-    // Wildly unrealistic on purpose: a tap reaches across town, a full
-    // charge reaches other continents, a critical one can reach the moon.
+  function yeetDistanceKm(e, power, crit, distMul) {
+    // Comic score, not the distance the mesh actually flies. Bodies despawn
+    // a couple of blocks away (GONE_DIST); this exponent is the joke.
+    // A full Yeetmallet charge still passes power ≈ 1, the original curve:
+    // a tap is across town, a full charge is other continents, a crit can
+    // reach the moon. Weapons and Mega Yeet only nudge it (see distMul).
     const exp = rand(-0.2, 0.75) + power * 3.4 - Math.log10(1 + e.mass) * 0.35;
-    return Math.pow(10, exp) * (crit ? rand(25, 60) : 1);
+    return Math.pow(10, exp) * (crit ? rand(25, 60) : 1) * (distMul || 1);
   }
 
   // ---------------------------------------------------------------------------
@@ -1020,15 +1334,23 @@
     const dx = dirX * cs - dirZ * sn;
     const dz = dirX * sn + dirZ * cs;
     const heavy = e.kind === "building" ? 0.6 : 1;
-    const hSpeed = (55 + power * 85 + rand(0, 25)) * heavy;
-    const vSpeed = (30 + power * 45 + rand(0, 20)) * heavy;
+    const w = weapon || WEAPONS.hammer;
+    const mega = buffs.mega > 0 ? MEGA_LAUNCH : 1;
+    const hSpeed = (55 + power * 85 * w.hMul + rand(0, 25)) * heavy * mega;
+    const vSpeed = (30 + power * 45 * w.vMul + rand(0, 20)) * heavy * mega;
     e.vel.set(dx * hSpeed, vSpeed, dz * hSpeed);
     e.spin.set(rand(-1, 1), rand(-1, 1), rand(-1, 1)).normalize().multiplyScalar(rand(6, 16) * (e.kind === "building" ? 0.3 : 1));
     if (e.collider) e.collider.on = false;
     if (e.kind === "person") sfx.scream();
 
-    const crit = !chained && Math.random() < 0.07 + power * 0.08;
-    const km = yeetDistanceKm(e, power, crit);
+    const wpn = weapon || WEAPONS.hammer;
+    // Bend the 0–1 charge through the weapon, then keep 1.0 == old hammer.
+    const expo = Math.min(1.35, power * (0.55 + 0.45 * wpn.power));
+    const critChance =
+      0.07 + power * 0.08 + (power > 0.95 ? wpn.critBonus : 0) + (buffs.mega > 0 ? 0.08 : 0);
+    const crit = !chained && Math.random() < critChance;
+    const distMul = wpn.distMul * (buffs.mega > 0 ? MEGA_DIST : 1);
+    const km = yeetDistanceKm(e, expo, crit, distMul);
     e.km = km;
     stats.yeets += 1;
     stats.total += km;
@@ -1051,6 +1373,7 @@
     swingCombo.crit = swingCombo.crit || crit;
     swingCombo.max = swingCombo.max || power > 0.95;
     showBanner();
+    noteYeet(e, km);
   }
 
   function hammerPoint(out) {
@@ -1060,13 +1383,14 @@
   }
 
   function impact(power) {
+    const w = weapon || WEAPONS.hammer;
     const fx = Math.sin(player.yaw);
     const fz = Math.cos(player.yaw);
     const hit = hammerPoint(new T.Vector3());
-    const reach = 2.4 + power * 2.8;
+    const reach = w.reach + power * w.reachGrow;
     let hits = 0;
     for (const e of entities) {
-      if (e.state === "fly" || e.state === "gone" || e.state === "rising") continue;
+      if (e.state === "fly" || e.state === "gone" || e.state === "rising" || e.state === "benched") continue;
       let dx;
       let dz;
       if (e.collider) {
@@ -1079,14 +1403,28 @@
         dx = p.x - hit.x;
         dz = p.z - hit.z;
         if (Math.hypot(dx, dz) - e.radius > reach) continue;
-        // Only things in front of the hero, give or take.
+        // Only things in front of the hero, give or take. Wider weapons
+        // (the broom) use a lower dot so the sweep clears the sidewalk.
         const px = p.x - player.pos.x;
         const pz = p.z - player.pos.z;
         const pd = Math.hypot(px, pz);
-        if (pd > 1.2 && (px * fx + pz * fz) / pd < 0.15) continue;
+        if (pd > 1.2 && (px * fx + pz * fz) / pd < w.arc) continue;
       }
       yeet(e, fx, fz, power, false);
       hits += 1;
+    }
+    if (hits > 0 && w.chain && Math.random() < w.chain) {
+      let buddy = null;
+      let buddyD = 4.2;
+      for (const e of entities) {
+        if (e.state !== "idle" || e.collider) continue;
+        const d = Math.hypot(e.group.position.x - hit.x, e.group.position.z - hit.z);
+        if (d < buddyD) {
+          buddy = e;
+          buddyD = d;
+        }
+      }
+      if (buddy) yeet(buddy, fx, fz, Math.max(0.35, power * 0.75), true);
     }
     sfx.whoosh(power);
     if (hits > 0) {
@@ -1101,24 +1439,27 @@
     // Everyone nearby panics.
     for (const e of entities) {
       if (!e.ai || e.ai.panic === undefined || e.state !== "idle") continue;
-      if (e.group.position.distanceTo(player.pos) < 22) e.ai.panic = rand(2, 3.5);
+      const panicR = 20 + Math.min(16, (levelNumber - 1) * 1.5);
+      if (e.group.position.distanceTo(player.pos) < panicR) e.ai.panic = rand(2, 3.5);
     }
   }
 
   function startCharge() {
-    if (!started) return;
+    if (!started || levelLock) return;
     initAudio();
-    if (player.charging || (player.swingT >= 0 && player.swingT < 0.3)) return;
+    const swingDur = (weapon || WEAPONS.hammer).swingTime;
+    if (player.charging || (player.swingT >= 0 && player.swingT < Math.min(0.3, swingDur))) return;
     player.charging = true;
     player.charge = 0;
   }
   function releaseCharge() {
     if (!player.charging) return;
+    const w = weapon || WEAPONS.hammer;
     player.charging = false;
-    player.swingCharge = clamp(player.charge / CHARGE_TIME, 0, 1);
+    player.swingCharge = clamp(player.charge / w.chargeTime, 0, 1);
     player.swingT = 0;
     player.hitDone = false;
-    player.lunge = 9 + player.swingCharge * 8;
+    player.lunge = (9 + player.swingCharge * 8) * w.lunge;
   }
 
   // ---------------------------------------------------------------------------
@@ -1133,21 +1474,37 @@
   const chargeEl = document.getElementById("charge");
   const chargeFill = document.getElementById("charge-fill");
   const muteBtn = document.getElementById("mute");
+  const levelNumEl = document.getElementById("level-num");
+  const levelNameEl = document.getElementById("level-name");
+  const goalEl = document.getElementById("goal");
+  const weaponNameEl = document.getElementById("weapon-name");
+  const buffsEl = document.getElementById("buffs");
+  const toastEl = document.getElementById("toast");
+  const levelScreen = document.getElementById("level-screen");
+  const levelHeading = document.getElementById("level-heading");
+  const levelDetail = document.getElementById("level-detail");
+  const levelUnlock = document.getElementById("level-unlock");
+  const levelNext = document.getElementById("level-next");
+  const saveLine = document.getElementById("save-line");
+  const replayBtn = document.getElementById("replay");
+  const startBtn = document.getElementById("start");
   const isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
   if (isTouch) document.body.classList.add("touch");
 
   function setHint() {
     if (!started) hint.textContent = "";
-    else if (isTouch) hint.textContent = "";
-    else if (!locked && !lockFailed) hint.textContent = "Click to grab the mouse for looking around";
-    else if (!locked) hint.textContent = "Drag to look around";
-    else hint.textContent = "Esc releases the mouse";
+    else if (isTouch) hint.textContent = "SWAP cycles weapons";
+    else if (!locked && !lockFailed) hint.textContent = "Click to grab the mouse · 1–4 or scroll to swap weapons";
+    else if (!locked) hint.textContent = "Drag to look · 1–4 or scroll to swap weapons";
+    else hint.textContent = "Esc releases the mouse · 1–4 or scroll to swap weapons";
   }
 
   document.getElementById("start").addEventListener("click", (ev) => {
     ev.stopPropagation();
     started = true;
+    beginLevel();
     overlay.classList.add("hidden");
+    toast(levelDef(levelNumber).blurb);
     initAudio();
     if (audio && audio.state === "suspended") audio.resume();
     if (!isTouch) requestLock();
@@ -1195,8 +1552,18 @@
     }
     keys.add(ev.code);
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(ev.code)) ev.preventDefault();
+    if (levelLock && (ev.code === "Enter" || ev.code === "Space")) {
+      ev.preventDefault();
+      advanceLevel();
+      return;
+    }
     if (!started && (ev.code === "Enter" || ev.code === "Space")) {
       document.getElementById("start").click();
+      return;
+    }
+    const slotKey = { Digit1: "hammer", Digit2: "broom", Digit3: "sign", Digit4: "fish" }[ev.code];
+    if (slotKey) {
+      tryEquip(slotKey);
       return;
     }
     if (ev.code === "Space" || ev.code === "KeyJ" || ev.code === "KeyF") startCharge();
@@ -1234,6 +1601,19 @@
     }
   });
   canvas.addEventListener("contextmenu", (ev) => ev.preventDefault());
+
+  let wheelAcc = 0;
+  window.addEventListener(
+    "wheel",
+    (ev) => {
+      if (!started || levelLock) return;
+      wheelAcc += ev.deltaY;
+      if (Math.abs(wheelAcc) < 60) return;
+      cycleWeapon(wheelAcc > 0 ? 1 : -1);
+      wheelAcc = 0;
+    },
+    { passive: true },
+  );
 
   // Touch: a floating stick on the left half, look-drag on the right half.
   const stickEl = document.getElementById("stick");
@@ -1321,6 +1701,11 @@
   };
   yeetBtn.addEventListener("touchend", yeetUp, { passive: false });
   yeetBtn.addEventListener("touchcancel", yeetUp, { passive: false });
+  document.getElementById("weapon-btn").addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    if (!started || levelLock) return;
+    cycleWeapon(1);
+  });
 
   // ---------------------------------------------------------------------------
   // Update
@@ -1341,8 +1726,10 @@
     if (keys.has("KeyE")) camYaw -= 2.2 * dt;
     const mag = Math.min(1, Math.hypot(ix, iy));
     const running = keys.has("ShiftLeft") || keys.has("ShiftRight") || (stick.id !== null && mag > 0.92);
-    const busy = player.charging || (player.swingT >= 0 && player.swingT < SWING_TIME);
+    const w = weapon || WEAPONS.hammer;
+    const busy = player.charging || (player.swingT >= 0 && player.swingT < w.swingTime);
     let speed = (running ? RUN_SPEED : WALK_SPEED) * mag;
+    if (buffs.speed > 0) speed *= SPEED_MUL;
     if (player.charging) speed *= 0.45;
 
     const fx = Math.sin(camYaw);
@@ -1382,20 +1769,25 @@
       }
     }
 
-    // Charging and swinging.
-    if (player.charging) player.charge = Math.min(CHARGE_TIME, player.charge + dt);
-    const c = player.charging ? player.charge / CHARGE_TIME : 0;
+    // Charging and swinging. Timing comes from the equipped weapon.
+    const chargeTime = w.chargeTime;
+    const swingDur = w.swingTime;
+    const impactAt = Math.min(IMPACT_AT, swingDur * 0.34);
+    if (player.charging) player.charge = Math.min(chargeTime, player.charge + dt);
+    const c = player.charging ? player.charge / chargeTime : 0;
     chargeEl.classList.toggle("show", player.charging);
     chargeFill.style.width = `${Math.round(c * 100)}%`;
 
     if (player.swingT >= 0) {
       player.swingT += dt;
-      if (!player.hitDone && player.swingT >= IMPACT_AT) {
+      if (!player.hitDone && player.swingT >= impactAt) {
         player.hitDone = true;
         impact(player.swingCharge);
       }
-      if (player.swingT > SWING_TIME) player.swingT = -1;
+      if (player.swingT > swingDur) player.swingT = -1;
     }
+
+    collectPickups();
 
     // Animation.
     const moving = Math.hypot(player.vel.x, player.vel.z);
@@ -1424,14 +1816,14 @@
     } else if (player.swingT >= 0) {
       const t = player.swingT;
       const from = player.windPose || mix(REST, WIND, 0.35);
-      if (t <= IMPACT_AT) {
-        pose = mix(from, STRIKE, 1 - Math.pow(1 - t / IMPACT_AT, 3));
+      if (t <= impactAt) {
+        pose = mix(from, STRIKE, 1 - Math.pow(1 - t / Math.max(0.02, impactAt), 3));
       } else {
-        const k = Math.min(1, (t - IMPACT_AT) / (SWING_TIME - IMPACT_AT));
+        const k = Math.min(1, (t - impactAt) / Math.max(0.05, swingDur - impactAt));
         // Hold the smash for a beat, then heave it back onto the shoulder.
         pose = mix(STRIKE, REST, Math.max(0, (k - 0.3) / 0.7) ** 2);
       }
-      headScale = 1 + player.swingCharge * 0.45 * (1 - Math.min(1, t / SWING_TIME));
+      headScale = 1 + player.swingCharge * 0.45 * (1 - Math.min(1, t / swingDur));
     } else {
       player.windPose = null;
     }
@@ -1439,7 +1831,8 @@
     H.hammer.rotation.x = pose[1];
     H.torso.rotation.x = pose[2];
     H.head.scale.setScalar(headScale);
-    H.headMat.emissive.setRGB(c * 0.6, c * 0.25, 0);
+    const glow = w.glow;
+    H.headMat.emissive.setRGB(c * glow[0], c * glow[1], c * glow[2]);
 
     hero.position.copy(player.pos);
     hero.rotation.y = player.yaw;
@@ -1459,7 +1852,17 @@
       vx = dx / d;
       vz = dz / d;
       speed = ai.speed * 2.8;
-    } else {
+    } else if (ai.role === "bouncer" && started) {
+      const dx = player.pos.x - p.x;
+      const dz = player.pos.z - p.z;
+      const d = Math.hypot(dx, dz) || 1;
+      if (d < 28) {
+        vx = dx / d;
+        vz = dz / d;
+        speed = ai.speed * 1.25;
+      }
+    }
+    if (!vx && !vz) {
       const [tx, tz] = perim(ai.ring, ai.s + ai.dir * 2);
       const dx = tx - p.x;
       const dz = tz - p.z;
@@ -1542,7 +1945,7 @@
     const g = e.group;
     g.visible = true;
     g.rotation.set(0, e.home.yaw, 0);
-    g.scale.setScalar(1);
+    g.scale.setScalar(e.homeScale || 1);
     e.vel.set(0, 0, 0);
     if (e.kind === "person" || e.kind === "dog") {
       // A fresh pedestrian wanders in from somewhere else on the loop.
@@ -1550,7 +1953,7 @@
       const [x, z] = perim(e.ai.ring, e.ai.s);
       g.position.set(x, 0, z);
       e.ai.panic = 0;
-      if (e.kind === "person") e.name = pick(NAMES);
+      if (e.kind === "person" && !e.ai.role) e.name = pick(NAMES);
       for (const l of Object.values(g.userData.limbs)) l.rotation.set(0, 0, 0);
     } else if (e.kind === "car") {
       e.ai.s = rand(0, 8 * e.ai.lane.h);
@@ -1575,6 +1978,7 @@
   function updateEntities(dt, now) {
     for (const e of entities) {
       const g = e.group;
+      if (e.state === "benched") continue;
       if (e.state === "idle") {
         if (e.kind === "person" || e.kind === "dog") steerWalker(e, dt);
         else if (e.kind === "car") driveCar(e, dt);
@@ -1601,7 +2005,7 @@
         // Early in the flight, whatever it smacks into gets yeeted too.
         if (e.t < 0.7 && e.kind !== "pigeon") {
           for (const o of entities) {
-            if (o === e || o.state !== "idle" || o.collider) continue;
+            if (o === e || o.state !== "idle" || o.collider || o.state === "benched") continue;
             const op = o.group.position;
             if (g.position.y > o.height + e.radius) continue;
             const reach = o.radius + e.radius + 0.4;
@@ -1619,7 +2023,8 @@
           twinkle(g.position);
           e.state = "gone";
           g.visible = false;
-          e.respawnAt = now + (e.kind === "building" ? RESPAWN_BUILDING : RESPAWN_PROP) * 1000 * rand(0.8, 1.3);
+          const refill = Math.max(0.45, 1 - (levelNumber - 1) * 0.04);
+          e.respawnAt = now + (e.kind === "building" ? RESPAWN_BUILDING : RESPAWN_PROP) * 1000 * rand(0.8, 1.3) * refill;
         }
       } else if (e.state === "gone") {
         if (now >= e.respawnAt) {
@@ -1630,9 +2035,10 @@
       } else if (e.state === "popping") {
         e.t += dt;
         const k = Math.min(1, e.t / 0.35);
-        g.scale.setScalar(Math.max(0.01, k) * (1 + Math.sin(k * Math.PI) * 0.25));
+        const base = e.homeScale || 1;
+        g.scale.setScalar(Math.max(0.01, k) * (1 + Math.sin(k * Math.PI) * 0.25) * base);
         if (k >= 1) {
-          g.scale.setScalar(1);
+          g.scale.setScalar(base);
           e.state = "idle";
         }
       } else if (e.state === "rising") {
@@ -1717,25 +2123,414 @@
   resize();
 
   // ---------------------------------------------------------------------------
+  // Levels, weapons, pickups
+  // ---------------------------------------------------------------------------
+  const buffNodes = {};
+  for (const id of PICKUP_ORDER) {
+    const el = document.createElement("span");
+    el.className = "buff";
+    el.style.color = PICKUPS[id].color;
+    el.hidden = true;
+    buffsEl.appendChild(el);
+    buffNodes[id] = el;
+  }
+
+  function mountWeapon(id) {
+    const w = WEAPONS[id];
+    const root = H.hammer;
+    while (root.children.length) root.remove(root.children[0]);
+    if (H.headMat) H.headMat.dispose();
+    const built = w.build(root);
+    H.head = built.head;
+    H.headMat = built.headMat;
+    weapon = w;
+    weaponId = id;
+  }
+
+  function syncWeaponLabel() {
+    weaponNameEl.textContent = weapon.name;
+  }
+
+  function weaponUnlocked(id) {
+    return WEAPONS[id].unlockAfter <= cleared;
+  }
+
+  function toast(text) {
+    toastEl.textContent = text;
+    toastEl.classList.add("show");
+    toastTimer = 1.5;
+  }
+
+  function tryEquip(id) {
+    const w = WEAPONS[id];
+    if (!w) return;
+    if (!weaponUnlocked(id)) {
+      toast(`${w.name} unlocks after level ${w.unlockAfter}`);
+      return;
+    }
+    if (player.charging || (player.swingT >= 0 && player.swingT < weapon.swingTime)) return;
+    if (id !== weaponId) mountWeapon(id);
+    syncWeaponLabel();
+    toast(w.name);
+  }
+
+  function cycleWeapon(dir) {
+    const open = WEAPON_ORDER.filter(weaponUnlocked);
+    if (open.length < 2) {
+      toast("One weapon. For now.");
+      return;
+    }
+    if (player.charging || (player.swingT >= 0 && player.swingT < weapon.swingTime)) return;
+    const i = Math.max(0, open.indexOf(weaponId));
+    const next = open[(i + dir + open.length) % open.length];
+    mountWeapon(next);
+    syncWeaponLabel();
+    toast(WEAPONS[next].name);
+  }
+
+  function goalLabel() {
+    const L = levelDef(levelNumber);
+    if (L.goal === "yeets") return `Yeet ${progress.yeets}/${L.target}`;
+    if (L.goal === "buildings") return `Buildings ${progress.buildings}/${L.target}`;
+    if (L.goal === "distance") return `Best ${fmtKm(progress.bestKm)} / ${fmtKm(L.target)}`;
+    if (L.goal === "total") return `This level ${fmtKm(progress.totalKm)} / ${fmtKm(L.target)}`;
+    return `Yeet ${progress.yeets}/${L.target} · ${fmtClock(progress.timeLeft)}`;
+  }
+
+  function renderGoal() {
+    levelNumEl.textContent = String(levelNumber);
+    levelNameEl.textContent = levelDef(levelNumber).name;
+    goalEl.textContent = goalLabel();
+  }
+
+  function renderTitle() {
+    const L = levelDef(levelNumber);
+    saveLine.textContent =
+      cleared > 0
+        ? `Best level cleared: ${cleared}. Level ${levelNumber}: ${L.name}. ${L.blurb}`
+        : `Level ${levelNumber}: ${L.name}. ${L.blurb}`;
+    startBtn.textContent = cleared > 0 && levelNumber > 1 ? `Continue: level ${levelNumber}` : "Start yeeting";
+    replayBtn.hidden = cleared === 0;
+  }
+
+  function renderBuffs() {
+    for (const id of PICKUP_ORDER) {
+      const el = buffNodes[id];
+      if (buffs[id] > 0) {
+        el.hidden = false;
+        el.textContent = `${PICKUPS[id].label} ${buffs[id].toFixed(1)}s`;
+      } else {
+        el.hidden = true;
+      }
+    }
+  }
+
+  function parkExtra(e) {
+    e.state = "benched";
+    e.group.visible = false;
+    e.ai.panic = 0;
+    e.vel.set(0, 0, 0);
+    e.group.position.y = -30;
+  }
+
+  function wakeExtra(e) {
+    const ring = e.ai.role === "bouncer" ? 9 : RINGS[Math.floor(Math.random() * RINGS.length)];
+    e.ai.ring = ring;
+    e.ai.s = rand(0, 8 * ring);
+    e.ai.dir = Math.random() < 0.5 ? 1 : -1;
+    e.ai.panic = 0;
+    const [x, z] = perim(ring, e.ai.s);
+    e.group.position.set(x, 0, z);
+    e.group.rotation.set(0, Math.atan2(x, z), 0);
+    e.group.scale.setScalar(e.homeScale || 1);
+    e.group.visible = true;
+    e.state = "idle";
+    if (e.group.userData.limbs) {
+      for (const limb of Object.values(e.group.userData.limbs)) limb.rotation.set(0, 0, 0);
+    }
+  }
+
+  function applyDifficulty(diff) {
+    const d = diff || {};
+    const walkers = d.walkers || 1;
+    const cars = d.cars || 1;
+    for (const e of entities) {
+      if (!e.ai) continue;
+      if ((e.kind === "person" || e.kind === "dog") && e.ai.speedBase) {
+        const roleMul = e.ai.role === "sprinter" ? 1.7 : e.ai.role === "bouncer" ? 0.9 : 1;
+        e.ai.speed = e.ai.speedBase * walkers * roleMul;
+      }
+      if (e.kind === "car" && e.ai.maxBase) e.ai.max = e.ai.maxBase * cars;
+    }
+    const ns = d.sprinters || 0;
+    const nb = d.bouncers || 0;
+    sprinters.forEach((e, i) => (i < ns ? wakeExtra(e) : parkExtra(e)));
+    bouncers.forEach((e, i) => (i < nb ? wakeExtra(e) : parkExtra(e)));
+  }
+
+  function beginLevel() {
+    const L = levelDef(levelNumber);
+    progress = {
+      yeets: 0,
+      bestKm: 0,
+      totalKm: 0,
+      buildings: 0,
+      timeLeft: L.seconds || 0,
+    };
+    levelLock = false;
+    player.charging = false;
+    player.swingT = -1;
+    player.pos.set(0, 0, -35.5);
+    applyDifficulty(L.diff);
+    renderGoal();
+    renderTitle();
+    syncWeaponLabel();
+  }
+
+  function showLevelScreen(kind, unlockedNow) {
+    levelLock = true;
+    levelOutcome = kind;
+    player.charging = false;
+    chargeEl.classList.remove("show");
+    toastTimer = 0;
+    toastEl.classList.remove("show");
+    if (document.pointerLockElement && document.exitPointerLock) document.exitPointerLock();
+    const L = levelDef(levelNumber);
+    if (kind === "clear") {
+      levelHeading.textContent = "LEVEL CLEARED";
+      levelDetail.textContent = `${L.name}. ${pick(CLEAR_LINES)}`;
+      levelUnlock.textContent = unlockedNow.length
+        ? `New weapon: ${unlockedNow.map((id) => `${WEAPONS[id].name} (${WEAPONS[id].slot})`).join(", ")}.`
+        : `Next up: level ${levelNumber + 1}, ${levelDef(levelNumber + 1).name}.`;
+      levelNext.textContent = "Next level";
+    } else {
+      levelHeading.textContent = "TIME'S UP";
+      levelDetail.textContent = `${L.name} ran out the clock. The block is smug about it.`;
+      levelUnlock.textContent = "Same goal. They will not expect the rematch.";
+      levelNext.textContent = "Try again";
+    }
+    levelScreen.classList.remove("hidden");
+  }
+
+  function clearLevel() {
+    if (levelLock) return;
+    const prev = cleared;
+    if (levelNumber > cleared) {
+      cleared = levelNumber;
+      storage.setProgress({ cleared });
+    }
+    const fresh = WEAPON_ORDER.filter((id) => WEAPONS[id].unlockAfter > prev && WEAPONS[id].unlockAfter <= cleared);
+    showLevelScreen("clear", fresh);
+  }
+
+  function failLevel() {
+    if (levelLock) return;
+    showLevelScreen("fail", []);
+  }
+
+  function advanceLevel() {
+    if (!levelLock) return;
+    levelScreen.classList.add("hidden");
+    if (levelOutcome === "clear") levelNumber += 1;
+    beginLevel();
+    toast(levelDef(levelNumber).blurb);
+    if (started && !isTouch) requestLock();
+  }
+
+  function noteYeet(e, km) {
+    if (!started || levelLock) return;
+    progress.yeets += 1;
+    progress.totalKm += km;
+    if (km > progress.bestKm) progress.bestKm = km;
+    if (e.kind === "building") progress.buildings += 1;
+    const L = levelDef(levelNumber);
+    let done = false;
+    if (L.goal === "yeets" || L.goal === "timer") done = progress.yeets >= L.target;
+    else if (L.goal === "distance") done = progress.bestKm >= L.target;
+    else if (L.goal === "total") done = progress.totalKm >= L.target;
+    else if (L.goal === "buildings") done = progress.buildings >= L.target;
+    renderGoal();
+    if (done) clearLevel();
+  }
+
+  function updateLevel(dt) {
+    const L = levelDef(levelNumber);
+    if (L.goal !== "timer") return;
+    progress.timeLeft -= dt;
+    if (progress.timeLeft <= 0) {
+      progress.timeLeft = 0;
+      renderGoal();
+      failLevel();
+      return;
+    }
+    renderGoal();
+  }
+
+  function pickupSpot() {
+    for (let attempt = 0; attempt < 24; attempt++) {
+      let x;
+      let z;
+      if (Math.random() < 0.4) {
+        x = rand(-20, 20);
+        z = rand(-20, 20);
+        if (Math.hypot(x, z) < 4.2) continue;
+      } else {
+        const h = Math.random() < 0.5 ? rand(33.6, 36.6) : rand(53.4, 56.4);
+        [x, z] = perim(h, rand(0, 8 * h));
+      }
+      let blocked = false;
+      for (const c of colliders) {
+        if (x > c.minX - 1.2 && x < c.maxX + 1.2 && z > c.minZ - 1.2 && z < c.maxZ + 1.2) blocked = true;
+      }
+      if (blocked) continue;
+      if (Math.hypot(x - player.pos.x, z - player.pos.z) < 5) continue;
+      return { x, z };
+    }
+    return { x: rand(-6, 6), z: rand(8, 16) };
+  }
+
+  function spawnPickup(forcedType, at) {
+    const taken = new Set(pickups.map((p) => p.type));
+    const open = PICKUP_ORDER.filter((id) => !taken.has(id));
+    const type = forcedType || (open.length ? pick(open) : null);
+    if (!type || !PICKUPS[type]) return null;
+    const spot = at || pickupSpot();
+    const info = PICKUPS[type];
+    const group = new T.Group();
+    const shellMat = new T.MeshBasicMaterial({ color: info.hex });
+    const shell = new T.Mesh(ico(0.62, 1), shellMat);
+    shell.position.y = 1.2;
+    group.add(shell);
+    const core = new T.Mesh(ico(0.26, 0), mat(0xfff7c2));
+    core.position.y = 1.2;
+    group.add(core);
+    group.position.set(spot.x, 0, spot.z);
+    scene.add(group);
+    const pu = { type, group, core, shellMat, t: rand(0, 4) };
+    pickups.push(pu);
+    return pu;
+  }
+
+  function removePickup(pu) {
+    scene.remove(pu.group);
+    pu.shellMat.dispose();
+    const i = pickups.indexOf(pu);
+    if (i >= 0) pickups.splice(i, 1);
+  }
+
+  function collectPickup(pu) {
+    buffs[pu.type] = PICKUPS[pu.type].seconds;
+    removePickup(pu);
+    sfx.ding();
+    toast(`${PICKUPS[pu.type].name}!`);
+    renderBuffs();
+  }
+
+  function collectPickups() {
+    for (let i = pickups.length - 1; i >= 0; i--) {
+      const pu = pickups[i];
+      const dx = pu.group.position.x - player.pos.x;
+      const dz = pu.group.position.z - player.pos.z;
+      if (dx * dx + dz * dz <= PICKUP_RADIUS * PICKUP_RADIUS) collectPickup(pu);
+    }
+  }
+
+  function updatePickups(dt) {
+    for (const pu of pickups) {
+      pu.t += dt;
+      pu.group.position.y = Math.sin(pu.t * 3) * 0.28;
+      pu.group.rotation.y += dt * 1.8;
+      pu.core.rotation.x += dt * 2.2;
+    }
+    if (!started || levelLock) return;
+    pickupTimer -= dt;
+    if (pickupTimer <= 0) {
+      pickupTimer = PICKUP_INTERVAL;
+      if (pickups.length < PICKUP_CAP) spawnPickup();
+    }
+  }
+
+  function updateMagnet(dt) {
+    if (buffs.magnet <= 0) return;
+    for (const e of entities) {
+      if (e.state !== "idle" || e.collider || e.mass > 3.5) continue;
+      const p = e.group.position;
+      const dx = player.pos.x - p.x;
+      const dz = player.pos.z - p.z;
+      const d = Math.hypot(dx, dz);
+      if (d < 1.15 || d > MAGNET_RADIUS) continue;
+      const step = MAGNET_PULL * (1 - d / MAGNET_RADIUS) * dt * 2.4;
+      p.x += (dx / d) * step;
+      p.z += (dz / d) * step;
+      if (e.kind === "person" || e.kind === "dog") pushOut(p, e.radius);
+    }
+    for (const pu of pickups) {
+      const dx = player.pos.x - pu.group.position.x;
+      const dz = player.pos.z - pu.group.position.z;
+      const d = Math.hypot(dx, dz) || 1;
+      if (d > MAGNET_RADIUS + 4) continue;
+      pu.group.position.x += (dx / d) * 10 * dt;
+      pu.group.position.z += (dz / d) * 10 * dt;
+    }
+  }
+
+  function updateBuffs(dt) {
+    let live = false;
+    for (const id of PICKUP_ORDER) {
+      if (buffs[id] > 0) {
+        buffs[id] = Math.max(0, buffs[id] - dt);
+        live = true;
+      }
+    }
+    if (live) renderBuffs();
+    if (toastTimer > 0) {
+      toastTimer -= dt;
+      if (toastTimer <= 0) toastEl.classList.remove("show");
+    }
+  }
+
+  levelNext.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    advanceLevel();
+  });
+  replayBtn.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    levelNumber = 1;
+    beginLevel();
+  });
+
+  beginLevel();
+  renderBuffs();
+
+  // ---------------------------------------------------------------------------
   // Main loop
   // ---------------------------------------------------------------------------
   let last = performance.now();
   camPos.set(player.pos.x - Math.sin(camYaw) * 9, 5, player.pos.z - Math.cos(camYaw) * 9);
   function frame(now) {
-    let dt = Math.min(0.05, (now - last) / 1000);
+    const raw = Math.min(0.05, (now - last) / 1000);
     last = now;
-    if (hitStop > 0) {
-      hitStop -= dt;
-      dt *= 0.08;
+    updateBuffs(raw);
+    if (started && !levelLock) {
+      const clockDt = buffs.slowmo > 0 ? raw * SLOWMO_SCALE : raw;
+      updateLevel(clockDt);
     }
-    if (started) updatePlayer(dt);
+    let dt = raw;
+    if (hitStop > 0) {
+      hitStop -= raw;
+      dt = raw * 0.08;
+    }
+    const entityDt = buffs.slowmo > 0 ? dt * SLOWMO_SCALE : dt;
+    if (started && !levelLock) updatePlayer(dt);
     else {
-      camYaw += dt * 0.15; // slow attract-mode orbit behind the title
+      if (!started) camYaw += dt * 0.15; // slow attract-mode orbit behind the title
       hero.position.copy(player.pos);
       hero.rotation.y = player.yaw;
     }
-    updateEntities(dt, now);
-    updateFx(dt);
+    updateMagnet(raw);
+    updatePickups(raw);
+    updateEntities(entityDt, now);
+    updateFx(entityDt);
     updateCamera(dt);
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
@@ -1743,5 +2538,51 @@
   requestAnimationFrame(frame);
 
   // Exposed for automated smoke tests; harmless in play.
-  window.__streetYeet = { entities, player, stats, yeet };
+  window.__streetYeet = {
+    entities,
+    player,
+    stats,
+    yeet,
+    get level() {
+      return levelNumber;
+    },
+    get cleared() {
+      return cleared;
+    },
+    get weapon() {
+      return weaponId;
+    },
+    get weaponStats() {
+      return {
+        id: weaponId,
+        name: weapon.name,
+        swingTime: weapon.swingTime,
+        chargeTime: weapon.chargeTime,
+        reach: weapon.reach,
+        arc: weapon.arc,
+        power: weapon.power,
+      };
+    },
+    get locked() {
+      return levelLock;
+    },
+    equip: tryEquip,
+    spawnPickup,
+    debug: {
+      setLevel(n) {
+        levelNumber = n;
+        levelScreen.classList.add("hidden");
+        beginLevel();
+      },
+      setCleared(n) {
+        cleared = n;
+        storage.setProgress({ cleared });
+        renderTitle();
+      },
+      buffs: () => ({ ...buffs }),
+      progress: () => ({ ...progress }),
+      pickups: () => pickups.map((p) => p.type),
+      tick: (seconds) => updateLevel(seconds),
+    },
+  };
 })();
