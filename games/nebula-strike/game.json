@@ -1,0 +1,15 @@
+{
+  "title": "Nebula Strike",
+  "description": "Blast through asteroid fields, alien fighters and hunting predators, chain combos for huge scores, grab boosters, and take down a boss every fifth wave.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Move the mouse, or use WASD or the arrow keys, to fly. Your guns fire automatically",
+    "Space, B or right click to drop a bomb that clears the screen",
+    "On touch screens, drag anywhere to fly and tap the BOMB button",
+    "Fly into boosters: P power, S shield, R rapid fire, M missiles, B bomb, U magnet, x2 double points, heart extra life",
+    "Kill quickly to build a combo multiplier, and collect gems for bonus points",
+    "P or Esc to pause, M to mute"
+  ],
+  "tags": ["arcade", "shooter", "action"]
+}
