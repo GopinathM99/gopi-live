@@ -1,0 +1,13 @@
+{
+  "title": "Sudoku",
+  "description": "Find your flow. Four difficulty levels, a fresh daily puzzle, pencil notes, and a little help when you need it.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "layout": "tall",
+  "controls": [
+    "Tap a square, then choose a number · or type 1–9",
+    "Arrow keys to move · N for pencil notes · Backspace to erase",
+    "Ctrl/Cmd + Z to undo · Space to pause"
+  ],
+  "tags": ["puzzle", "classic", "relaxing"]
+}

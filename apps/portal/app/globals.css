@@ -1123,6 +1123,22 @@ a {
   display: block;
 }
 
+.frame-tall:not(:fullscreen):not(.frame-fill) {
+  aspect-ratio: auto;
+  max-height: none;
+  container-type: inline-size;
+}
+
+.frame-tall:not(:fullscreen):not(.frame-fill) iframe {
+  height: 680px;
+}
+
+@container (max-width: 620px) {
+  .frame-tall:not(:fullscreen):not(.frame-fill) iframe {
+    height: calc(100cqw + 480px);
+  }
+}
+
 .frame:fullscreen,
 .frame-fill {
   max-width: none;
