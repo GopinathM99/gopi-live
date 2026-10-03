@@ -1,0 +1,17 @@
+{
+  "title": "Viper Strike",
+  "description": "Start the engines, taxi, and take off in a 3D fighter jet, then dogfight enemy fighters, dodge SAMs, and wreck the enemy airfield before your fuel runs out.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "W and S (or the up and down arrows) pitch the nose. S pulls the nose up",
+    "A and D (or the left and right arrows) roll. Z and C work the rudder and steer on the ground",
+    "Shift and Ctrl set the throttle (also + and -, or Page Up and Page Down). Full throttle lights the afterburner",
+    "G raises and lowers the gear, F the flaps, and holding B brakes",
+    "Space fires the gun. Q, E or a click fires a missile, best once the lock tone is steady",
+    "R picks the next target, X drops flares, V swaps between chase and cockpit views",
+    "P or Esc pauses, with stick sensitivity and volume settings. M mutes",
+    "Land at home base and stop to rearm and refuel"
+  ],
+  "tags": ["3d", "flight", "action", "shooter"]
+}

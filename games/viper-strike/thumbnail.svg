@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c2a52"/>
+      <stop offset="0.65" stop-color="#e08a52"/>
+      <stop offset="1" stop-color="#f3b878"/>
+    </linearGradient>
+    <radialGradient id="burn" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff8e8"/>
+      <stop offset="0.45" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff6a1a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="320" height="200" fill="url(#sky)"/>
+  <circle cx="250" cy="128" r="16" fill="#ffd9a0" opacity="0.9"/>
+  <path d="M0 150 L40 132 L80 142 L130 120 L175 140 L220 126 L270 138 L320 128 L320 200 L0 200 Z" fill="#3a3348"/>
+  <path d="M0 168 L60 158 L120 166 L200 154 L260 164 L320 158 L320 200 L0 200 Z" fill="#26222f"/>
+  <!-- runway lights -->
+  <g fill="#fff2c0"><circle cx="60" cy="182" r="1.6"/><circle cx="90" cy="180" r="1.6"/><circle cx="120" cy="178" r="1.6"/><circle cx="150" cy="176" r="1.6"/></g>
+  <!-- bandit -->
+  <path d="M262 52 l10 3 6 -3 1 2 -5 3 7 2 -1 2 -9 -2 -9 2 z" fill="#5a3a30"/>
+  <!-- fighter, seen from behind and above -->
+  <g transform="translate(150 96) rotate(-12)">
+    <ellipse cx="-12" cy="34" rx="16" ry="12" fill="url(#burn)"/>
+    <ellipse cx="12" cy="34" rx="16" ry="12" fill="url(#burn)"/>
+    <path d="M0 -44 L7 -20 L10 6 L62 26 L62 32 L12 24 L12 30 L-12 30 L-12 24 L-62 32 L-62 26 L-10 6 L-7 -20 Z" fill="#8a96a3"/>
+    <path d="M10 14 L30 30 L30 34 L10 28 Z M-10 14 L-30 30 L-30 34 L-10 28 Z" fill="#6b7682"/>
+    <path d="M8 2 L20 -24 L23 -22 L13 20 Z M-8 2 L-20 -24 L-23 -22 L-13 20 Z" fill="#76828e"/>
+    <ellipse cx="0" cy="-22" rx="4" ry="10" fill="#d8b060" opacity="0.9"/>
+    <circle cx="-8" cy="30" r="5" fill="#ffe2a8"/>
+    <circle cx="8" cy="30" r="5" fill="#ffe2a8"/>
+  </g>
+  <!-- HUD marks -->
+  <g stroke="#8dffa8" stroke-width="2" fill="none" opacity="0.85">
+    <path d="M118 60 h22 M180 60 h22"/>
+    <path d="M150 40 l5 -5 5 5"/>
+    <rect x="252" y="45" width="26" height="20"/>
+  </g>
+</svg>
