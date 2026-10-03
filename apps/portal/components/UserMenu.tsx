@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
+import { avatarSrc, chosenAvatar } from "@/lib/avatars";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 
 /**
@@ -43,15 +44,22 @@ export default function UserMenu() {
   const meta = user.user_metadata as { full_name?: string; name?: string; user_name?: string; avatar_url?: string };
   const name = meta.full_name ?? meta.name ?? meta.user_name ?? user.email ?? "Player";
 
+  const avatar = chosenAvatar(user);
+  const avatarHref = `/avatar?next=${encodeURIComponent(pathname === "/avatar" ? "/" : pathname)}`;
+
   return (
     <div className="user-menu">
-      {meta.avatar_url ? (
-        <img src={meta.avatar_url} alt="" className="user-avatar" width={30} height={30} referrerPolicy="no-referrer" />
-      ) : (
-        <span className="user-avatar user-avatar-fallback" aria-hidden="true">
-          {name.charAt(0).toUpperCase()}
-        </span>
-      )}
+      <Link href={avatarHref} className="user-avatar-link" title="Change avatar" aria-label="Change avatar">
+        {avatar ? (
+          <img src={avatarSrc(avatar)} alt="" className="user-avatar" width={30} height={30} />
+        ) : meta.avatar_url ? (
+          <img src={meta.avatar_url} alt="" className="user-avatar" width={30} height={30} referrerPolicy="no-referrer" />
+        ) : (
+          <span className="user-avatar user-avatar-fallback" aria-hidden="true">
+            {name.charAt(0).toUpperCase()}
+          </span>
+        )}
+      </Link>
       <span className="user-name">{name}</span>
       <button type="button" className="nav-signout" onClick={() => supabase.auth.signOut()}>
         Sign out
