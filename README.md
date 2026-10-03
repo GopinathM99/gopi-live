@@ -77,8 +77,37 @@ Import the repo and set the project's **Root Directory** to `apps/portal`.
 Keep "Include source files outside of the Root Directory" enabled (the
 default), since the build copies games from `../../games`.
 
+## Sign-in (Google and GitHub)
+
+Sign-in uses Supabase Auth. Until the two env vars below are set, the
+"Sign in" link stays hidden and `/login` says sign-in isn't switched on, so
+the site works without it.
+
+1. Create a project at [supabase.com](https://supabase.com). From
+   **Project Settings > API**, copy the Project URL and the publishable
+   (anon) key.
+2. In Supabase **Authentication > URL Configuration**, set Site URL to
+   `https://www.gopi.live` and add these Redirect URLs:
+   `https://www.gopi.live/auth/callback`,
+   `https://*-gopinath-merugumalas-projects.vercel.app/auth/callback` (previews) and
+   `http://localhost:3000/auth/callback` (local dev).
+3. GitHub: create an OAuth App at GitHub **Settings > Developer settings >
+   OAuth Apps**. Homepage URL `https://www.gopi.live`; Authorization callback
+   URL `https://<project-ref>.supabase.co/auth/v1/callback`. Paste its Client
+   ID and a new Client Secret into Supabase **Authentication > Providers >
+   GitHub** and enable it.
+4. Google: in Google Cloud Console, configure the OAuth consent screen, then
+   create an OAuth client ID (type "Web application") with authorized
+   redirect URI `https://<project-ref>.supabase.co/auth/v1/callback`. Paste
+   the Client ID and secret into Supabase **Authentication > Providers >
+   Google** and enable it.
+5. In Vercel (project gopi-live, **Settings > Environment Variables**), add
+   `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for
+   Production and Preview, then redeploy. For local dev, put the same two
+   lines in `apps/portal/.env.local`.
+
 ## Not here yet
 
-Auth, saves and leaderboards (Supabase), WebAssembly builds for C++/Rust/Unity/
+Saves and leaderboards (Supabase), WebAssembly builds for C++/Rust/Unity/
 Godot games (GitHub Actions), large assets in object storage, multiplayer, and
 serving games from a separate `play.gopi.live` origin.
