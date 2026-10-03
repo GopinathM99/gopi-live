@@ -63,9 +63,10 @@
     });
     keys.forEach((button, j) => {
       const n = j + 1, remaining = Math.max(0, 9 - state.board.filter(v => v === n).length);
-      button.innerHTML = `${n}<small aria-hidden="true">${remaining ? "·".repeat(Math.min(remaining, 3)) : "✓"}</small>`;
+      button.innerHTML = `${n}<small aria-hidden="true">${remaining || "✓"}</small>`;
       button.classList.toggle("complete", remaining === 0);
       button.setAttribute("aria-label", `Enter ${n}, ${remaining} remaining`);
+      button.title = `${remaining} remaining`;
       button.disabled = state.won || busy;
     });
     const total = state.puzzle.filter(n => !n).length, filled = state.board.filter((n, i) => n && !state.puzzle[i]).length;

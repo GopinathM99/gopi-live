@@ -370,7 +370,7 @@ select {
   display: grid;
   grid-template-columns: repeat(4,1fr);
   gap: 5px;
-  margin: 17px 0;
+  margin: 13px 0;
 }
 
 .tools button {
@@ -440,12 +440,29 @@ select {
 }
 
 .keypad button.complete {
-  opacity: .35;
+  background: #e2e9da;
+  color: #526947;
 }
 
 .keypad small {
-  font-size: 7px;
-  color: #7b8f6c;
+  min-width: 18px;
+  padding: 0 3px;
+  border-radius: 4px;
+  background: #d9e6cc;
+  color: #2f5739;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.keypad-help {
+  grid-column: 1/-1;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 15px;
+  text-align: center;
 }
 
 .message {
@@ -756,7 +773,7 @@ body.modal-open #board {
   }
   .tools {
     grid-column: 1/-1;
-    margin: 12px 0;
+    margin: 8px 0;
   }
   .tools button {
     font-size: 10px;
@@ -776,7 +793,7 @@ body.modal-open #board {
     grid-column: 1/-1;
     min-height: 29px;
     font-size: 11px;
-    margin: 9px 0;
+    margin: 5px 0;
   }
   .daily {
     margin: 0;

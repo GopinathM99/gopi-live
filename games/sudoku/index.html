@@ -24,7 +24,8 @@
         <div class="intro"><span class="eyebrow">LESS RUSH. MORE REASON.</span><h2>Find your flow.</h2><p>Nine numbers. Endless possibilities.<br>One satisfying square at a time.</p></div>
         <div class="difficulty-control"><label for="difficulty">YOUR CHALLENGE</label><select id="difficulty"><option value="easy">Easy · A gentle start</option><option value="medium">Medium · Find your rhythm</option><option value="hard">Hard · Go a little deeper</option><option value="expert">Expert · Embrace the challenge</option></select></div>
         <div class="tools"><button id="notes" aria-pressed="false"><span aria-hidden="true">✎</span>Notes<small id="notes-label">OFF</small></button><button id="erase"><span aria-hidden="true">⌫</span>Erase</button><button id="undo" disabled><span aria-hidden="true">↶</span>Undo</button><button id="hint"><span aria-hidden="true">✧</span>Hint<small id="hint-count">3</small></button></div>
-        <div id="keypad" class="keypad" aria-label="Number pad"></div>
+        <div id="keypad" class="keypad" aria-label="Number pad" aria-describedby="keypad-help"></div>
+        <p class="keypad-help" id="keypad-help">Counts below each number = remaining.</p>
         <p class="message" id="message" role="status" aria-live="polite">Pick an empty square to begin.</p>
         <button class="primary" id="new-game">New puzzle <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M3 13 13 3M3 3h10v10" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
         <button class="daily" id="daily"><span aria-hidden="true">◷</span><span>Daily ritual<small id="daily-date"></small></span><span class="daily-arrow" aria-hidden="true">→</span></button>
