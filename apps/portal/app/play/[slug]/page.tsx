@@ -27,7 +27,7 @@ export default async function PlayPage({ params }: Props) {
         ← All games
       </Link>
       <h1>{game.title}</h1>
-      <GameFrame src={game.url} title={game.title} />
+      <GameFrame src={game.url} title={game.title} layout={game.layout} />
       <section className="controls">
         <h2>Controls</h2>
         <ul>

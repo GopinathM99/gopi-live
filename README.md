@@ -26,6 +26,8 @@ pnpm build      # production build of the portal
 pnpm typecheck
 ```
 
+Sudoku puzzle-generation checks run with `node --test tests/sudoku.test.cjs`.
+
 ## Home page photo
 
 The hero shows a placeholder portrait until a photo is set. Drop a square
@@ -52,6 +54,8 @@ image (640x640 or larger) into `apps/portal/public/`, e.g.
 
    `thumbnail` and `entry` are paths relative to the game folder. The build
    fails if a required field is missing or a referenced file doesn't exist.
+   Games with vertically stacked controls can also set `"layout": "tall"`
+   for a taller, responsive frame (see Sudoku).
 
 4. Run `pnpm dev`; the game appears on the home page and plays at
    `/play/<slug>`.
