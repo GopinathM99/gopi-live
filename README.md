@@ -106,6 +106,12 @@ the site works without it.
    Production and Preview, then redeploy. For local dev, put the same two
    lines in `apps/portal/.env.local`.
 
+After their first sign-in, players are asked to pick a gamer avatar
+(`/avatar`). The choice is saved on their Supabase user as
+`user_metadata.gamer_avatar`, so it sticks across sign-ins and devices until
+they change it by clicking their avatar in the header. The avatars are SVGs in
+`apps/portal/public/avatars/`, listed in `apps/portal/lib/avatars.ts`.
+
 ## Not here yet
 
 Saves and leaderboards (Supabase), WebAssembly builds for C++/Rust/Unity/

@@ -144,6 +144,23 @@ a {
   border: 1px solid var(--border);
 }
 
+.nav .user-avatar-link {
+  display: block;
+  padding: 0;
+  border-radius: 50%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav .user-avatar-link:hover {
+  background: none;
+  transform: scale(1.08);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.user-avatar-link img.user-avatar {
+  display: block;
+}
+
 .user-avatar-fallback {
   display: grid;
   place-items: center;
@@ -270,6 +287,73 @@ a {
 
 .auth-back:hover {
   color: var(--text);
+}
+
+/* ---------- Avatar picker ---------- */
+
+.avatar-card {
+  max-width: 640px;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+.avatar-option {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 12px 6px 10px;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.avatar-option img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+}
+
+.avatar-option:hover {
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.avatar-option[aria-checked="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px -6px rgba(94, 234, 212, 0.7);
+}
+
+.avatar-option:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.avatar-picker .auth-error {
+  margin: 16px 0 0;
+}
+
+.avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.avatar-actions .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  animation: none;
 }
 
 /* ---------- Buttons ---------- */
@@ -1050,6 +1134,15 @@ a {
 @media (max-width: 480px) {
   .user-name {
     display: none;
+  }
+
+  .avatar-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .avatar-option img {
+    width: 56px;
+    height: 56px;
   }
 
   .hero-line {
