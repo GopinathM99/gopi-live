@@ -60,6 +60,85 @@
         border: 2px solid #ff5a4a; color: #ff5a4a; font-weight: 900; letter-spacing: 0.3em; border-radius: 4px;
         background: rgba(0, 0, 0, 0.4);
       }
+      /* ---- flight training coach ---- */
+      #coach { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+      #coach-panel {
+        position: fixed; left: 16px; top: 62px; width: min(282px, calc(100vw - 32px)); padding: 12px 14px;
+        background: rgba(4, 16, 26, 0.78); border: 1px solid rgba(120, 200, 255, 0.25); border-left: 3px solid #6bff8f; border-radius: 8px;
+        line-height: 1.4; color: #e6f2ff; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      }
+      .c-head { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.14em; color: #6bff8f; font-weight: 700; }
+      #c-title { font-size: 18px; font-weight: 800; margin: 2px 0 6px; color: #fff; }
+      #c-text { font-size: 14px; color: #d4e6f5; }
+      #c-text b { color: #ffd27a; }
+      .prog { display: flex; align-items: center; gap: 8px; margin-top: 9px; font-size: 12px; color: #a9c2d6; }
+      .prog .bar { flex: 1; height: 7px; border-radius: 4px; background: rgba(160, 190, 220, 0.18); overflow: hidden; }
+      .prog .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #6bff8f, #c6ff7a); transition: width 0.15s; }
+      #c-now-box { margin-top: 9px; padding: 7px 9px; border-radius: 6px; background: rgba(107, 255, 143, 0.09); font-size: 13px; color: #dfffe8; }
+      #c-now-box .tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; color: #6bff8f; margin-right: 6px; }
+      #c-now-box.alarm { background: rgba(255, 90, 74, 0.25); color: #ffd9d4; animation: blink 0.6s step-end infinite alternate; }
+      #c-now-box.alarm .tag { color: #ff8a7a; }
+      @keyframes blink { 50% { background: rgba(255, 90, 74, 0.45); } }
+      .c-foot { margin-top: 8px; font-size: 11px; color: #7f97ad; }
+      .c-foot kbd, #coach-banner kbd { font: inherit; font-weight: 800; color: #e6eef6; padding: 0 4px; border: 1px solid rgba(160, 190, 220, 0.4); border-radius: 3px; }
+      #coach-log { margin-top: 10px; font-size: 12px; }
+      .c-logtitle { font-size: 10px; letter-spacing: 0.16em; color: #7f97ad; font-weight: 800; margin-bottom: 3px; }
+      #c-log div { display: flex; gap: 7px; padding: 2px 0; color: #bcd0e2; animation: logIn 0.35s ease-out; }
+      #c-log div:not(:first-child) { opacity: 0.72; }
+      #c-log time { color: #6f879c; font-variant-numeric: tabular-nums; min-width: 2.6em; }
+      #c-log .l-good { color: #8dffa8; }
+      #c-log .l-warn { color: #ffc65a; }
+      #c-log .l-head { color: #fff; font-weight: 700; }
+      @keyframes logIn { from { transform: translateX(-8px); opacity: 0; } }
+      #coach.tips-off #c-text, #coach.tips-off #coach-log, #coach.tips-off .prog { display: none; }
+      #coach-keys {
+        position: fixed; left: 50%; bottom: 72px; transform: translateX(-50%); max-width: calc(100vw - 32px);
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+      }
+      .k-title { font-size: 10px; font-weight: 800; letter-spacing: 0.22em; color: #6bff8f; text-shadow: 0 1px 3px #000; }
+      #c-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+      .k-none { padding: 10px 16px; border-radius: 8px; background: rgba(4, 16, 26, 0.7); color: #a9c2d6; font-size: 14px; }
+      .kc {
+        display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px 7px; min-width: 92px; max-width: 150px;
+        border-radius: 10px; background: rgba(4, 16, 26, 0.78); border: 1px solid rgba(255, 210, 122, 0.35);
+      }
+      .kc .cap {
+        min-width: 46px; padding: 7px 10px; border-radius: 7px; font-weight: 900; font-size: 18px; color: #0b1622; text-align: center; white-space: nowrap;
+        background: linear-gradient(180deg, #fff6df, #ffd27a); box-shadow: 0 4px 0 #b9852f, 0 6px 10px rgba(0, 0, 0, 0.4); transition: transform 0.06s, box-shadow 0.06s;
+      }
+      .kc.wide .cap { min-width: 96px; }
+      .kc .how { font-size: 9px; font-weight: 800; letter-spacing: 0.18em; color: #ffd27a; }
+      .kc.tap .how { color: #9fd8ff; }
+      .kc.soon { opacity: 0.6; border-style: dashed; }
+      .kc.soon .cap { animation: none; filter: grayscale(0.6); }
+      .kc.soon .how { color: #a9c2d6; }
+      .kc .lbl { font-size: 12px; color: #e6eef6; text-align: center; line-height: 1.25; }
+      .kc:not(.down):not(.soon) .cap { animation: nudge 1.1s ease-in-out infinite; }
+      @keyframes nudge { 50% { box-shadow: 0 4px 0 #b9852f, 0 0 18px rgba(255, 210, 122, 0.75); } }
+      .kc.down { border-color: #6bff8f; background: rgba(10, 50, 24, 0.85); }
+      .kc.down .cap { transform: translateY(3px); background: linear-gradient(180deg, #e2ffe9, #6bff8f); box-shadow: 0 1px 0 #2f9a4f, 0 0 20px rgba(107, 255, 143, 0.8); }
+      #coach-banner {
+        position: fixed; left: 50%; top: 24%; transform: translateX(-50%); padding: 14px 26px; border-radius: 12px; text-align: center;
+        background: rgba(4, 30, 14, 0.85); border: 1px solid #6bff8f; display: flex; flex-direction: column; gap: 4px; animation: pop 0.4s ease-out;
+      }
+      #coach-banner b { font-size: 22px; letter-spacing: 0.16em; color: #8dffa8; }
+      #coach-banner span { font-size: 16px; color: #fff; }
+      #coach-banner small { font-size: 13px; color: #a9c2d6; }
+      @keyframes pop { from { transform: translateX(-50%) scale(0.85); opacity: 0; } }
+      #coach-banner.hidden { display: none; }
+      .lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 680px; width: 100%; }
+      .lessons button {
+        display: flex; gap: 10px; align-items: flex-start; text-align: left; padding: 10px 12px; font-weight: 400; letter-spacing: 0;
+        background: rgba(10, 24, 38, 0.85); color: #e6eef6; border: 1px solid rgba(120, 170, 220, 0.25);
+      }
+      .lessons button:hover { border-color: #6bff8f; }
+      .lessons .num { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: rgba(160, 190, 220, 0.18); }
+      .lessons .done .num { background: #6bff8f; color: #071018; }
+      .lessons b { display: block; font-size: 14px; color: #fff; }
+      .lessons small { font-size: 12px; color: #9fb6cc; line-height: 1.35; }
+      button.train { background: linear-gradient(180deg, #b6ffc8, #47d872); }
+      .train-pitch { margin: 0; font-size: 14px; color: #8dffa8; }
+      @media (max-width: 640px) { .lessons { grid-template-columns: 1fr; } }
       #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 20; background: #05080c; letter-spacing: 0.2em; color: #9fb6cc; }
       @media (max-width: 640px) { .card { grid-template-columns: 1fr; } }
     </style>
@@ -75,6 +154,20 @@
       <div class="skip">H hides the instructor</div>
     </div>
     <div id="replay-tag" class="hidden">REPLAY</div>
+
+    <div id="coach" class="hidden">
+      <div id="coach-panel">
+        <div class="c-head"><span id="c-lesson">LESSON 1</span><span id="c-step">STEP 1</span></div>
+        <div id="c-title"></div>
+        <div id="c-text"></div>
+        <div id="c-prog" class="prog hidden"><div class="bar"><i id="c-bar"></i></div><span id="c-prog-label"></span></div>
+        <div id="c-now-box"><span class="tag">NOW</span><span id="c-now"></span></div>
+        <div id="coach-log"><div class="c-logtitle">FLIGHT LOG</div><div id="c-log"></div></div>
+        <div class="c-foot"><kbd>N</kbd> next lesson · <kbd>Y</kbd> repeat · <kbd>L</kbd> lessons · <kbd>H</kbd> fewer tips</div>
+      </div>
+      <div id="coach-keys"><div class="k-title">PRESS NOW</div><div id="c-keys"></div></div>
+      <div id="coach-banner" class="hidden"></div>
+    </div>
 
     <div id="start-screen" class="overlay">
       <h1>VIPER STRIKE</h1>
@@ -99,9 +192,21 @@
         <div><span>Pause and settings</span><b>P or Esc</b></div>
       </div>
       <p class="note">Throttle also works with + and − (or Page Up / Page Down). Some browsers close the tab on Ctrl+W, so let go of Ctrl before you push W. M mutes.</p>
+      <p class="train-pitch">First time flying? Flight training shows you exactly which key to press, step by step.</p>
       <div class="buttons">
+        <button id="btn-train" type="button" class="train">Flight training</button>
         <button id="btn-start" type="button">Start sortie</button>
         <button id="btn-air" type="button" class="secondary">Start airborne</button>
+      </div>
+    </div>
+
+    <div id="training-screen" class="overlay hidden">
+      <h2>FLIGHT TRAINING</h2>
+      <p class="tagline">No enemies, unlimited fuel and ammo, and crashing just restarts the lesson. A coach shows exactly which keys to press and narrates what the jet is doing. Practise any lesson as long as you like.</p>
+      <div id="lesson-list" class="lessons"></div>
+      <div class="buttons">
+        <button id="btn-train-go" type="button" class="train">Start lesson 1</button>
+        <button id="btn-train-back" type="button" class="secondary">Back</button>
       </div>
     </div>
 
@@ -116,6 +221,7 @@
       <div class="buttons">
         <button id="btn-resume" type="button">Resume</button>
         <button id="btn-restart" type="button" class="secondary">Restart sortie</button>
+        <button id="btn-lessons" type="button" class="secondary hidden">Lessons</button>
       </div>
       <p class="note">P or Esc resumes. V switches the view, H shows or hides the instructor.</p>
     </div>
@@ -2580,7 +2686,7 @@
   function targetCandidates() {
     const list = [];
     for (const f of fighters) if (f.alive && f.pos.distanceTo(player.pos) < RADAR_RANGE) list.push(f);
-    for (const t of groundTargets) if (t.alive && t.pos.distanceTo(player.pos) < 9000) list.push(t);
+    if (!training.active) for (const t of groundTargets) if (t.alive && t.pos.distanceTo(player.pos) < 9000) list.push(t);
     return list.sort((a, b) => (a.kind === b.kind ? angleOffNose(a.pos) - angleOffNose(b.pos) : a.kind === "air" ? -1 : 1));
   }
   function cycleTarget() {
@@ -2658,7 +2764,10 @@
       this.alive = true;
       this.state = opts.state || "engage";
       this.center = opts.center ? opts.center.clone() : null;
-      this.orbitA = rand(0, Math.PI * 2);
+      this.orbitA = opts.orbitA ?? rand(0, Math.PI * 2);
+      this.orbitR = opts.orbitR || 2600;
+      this.drone = !!opts.drone; // training target: cruises a gentle circle and never fights back
+      this.cruise = opts.cruise || 210;
       this.missiles = 2;
       this.gunCD = rand(1, 3);
       this.burst = 0;
@@ -2676,14 +2785,15 @@
       this.hp -= d;
       if (this.hp > 0) {
         if (this.hp < 20 && Math.random() < 0.5) smoke.spawn(this.pos.x, this.pos.y, this.pos.z, 0, 0, 0, 2, 3, 9, [0.15, 0.15, 0.15], [0.3, 0.3, 0.3], 0.7, 0.5);
-        if (this.state === "patrol") this.state = "engage";
+        if (this.state === "patrol" && !this.drone) this.state = "engage";
         return;
       }
       this.alive = false;
       explosion(this.pos, 1.6, { vel: this.vel, debris: 10 });
       wrecks.push({ mesh: this.mesh, p: this.pos.clone(), v: this.vel.clone().multiplyScalar(0.7), spin: V3(rand(-2, 2), rand(-1, 1), rand(-3, 3)), t: 0 });
       player.kills++;
-      mission.onFighterKill(this);
+      if (this.drone) training.onDroneKill(this);
+      else mission.onFighterKill(this);
     }
     update(dt) {
       if (!this.alive) return;
@@ -2693,9 +2803,9 @@
       const desired = V3();
       const lookAng = Math.acos(clamp(toP.dot(this.fwd) / Math.max(dist, 1), -1, 1));
       if (this.state === "patrol") {
-        if (P.alive && dist < 8500 && (lookAng < 1.3 || dist < 4500)) this.state = "engage";
-        this.orbitA += (this.speed / 2600) * dt;
-        desired.set(this.center.x + Math.cos(this.orbitA) * 2600, this.center.y, this.center.z + Math.sin(this.orbitA) * 2600).sub(this.pos).normalize();
+        if (!this.drone && P.alive && dist < 8500 && (lookAng < 1.3 || dist < 4500)) this.state = "engage";
+        this.orbitA += (this.speed / this.orbitR) * dt;
+        desired.set(this.center.x + Math.cos(this.orbitA) * this.orbitR, this.center.y, this.center.z + Math.sin(this.orbitA) * this.orbitR).sub(this.pos).normalize();
       }
       if (this.state === "engage") {
         if (!this.called && dist < 11000) {
@@ -2749,7 +2859,7 @@
       const ang = Math.acos(clamp(desired.dot(this.fwd), -1, 1));
       const maxTurn = Math.min((7.2 * GRAV) / this.speed, 0.42) * this.skill * dt;
       if (ang > 1e-4) this.fwd.lerp(desired, Math.min(1, maxTurn / ang)).normalize();
-      const targetSpeed = this.state === "engage" ? 255 : 210;
+      const targetSpeed = this.state === "engage" ? 255 : this.cruise;
       this.speed += clamp(targetSpeed - this.speed, -25 * dt, 18 * dt) - this.fwd.y * GRAV * 0.6 * dt;
       this.speed = clamp(this.speed, 140, 330);
       // The lift vector (turn acceleration plus 1 g) sets the bank angle.
@@ -3025,6 +3135,910 @@
   };
 
   // ===========================================================================
+  // FLIGHT TRAINING: lessons with a live coach that shows which keys to press
+  // right now, plus a running flight log. No enemies, no fuel or ammo limits,
+  // and a crash just restarts the lesson.
+  // ===========================================================================
+  const KEYDEF = {
+    thrUp: { codes: ["ShiftLeft", "ShiftRight", "Equal", "NumpadAdd", "PageUp"], cap: "Shift", alt: "+" },
+    thrDn: { codes: ["ControlLeft", "ControlRight", "Minus", "NumpadSubtract", "PageDown"], cap: "Ctrl", alt: "−" },
+    S: { codes: ["KeyS", "ArrowDown"], cap: "S", alt: "↓" },
+    W: { codes: ["KeyW", "ArrowUp"], cap: "W", alt: "↑" },
+    A: { codes: ["KeyA", "ArrowLeft"], cap: "A", alt: "←" },
+    D: { codes: ["KeyD", "ArrowRight"], cap: "D", alt: "→" },
+    Z: { codes: ["KeyZ", "Comma"], cap: "Z" },
+    C: { codes: ["KeyC", "Period"], cap: "C" },
+    G: { codes: ["KeyG"], cap: "G" },
+    F: { codes: ["KeyF"], cap: "F" },
+    B: { codes: ["KeyB"], cap: "B" },
+    gun: { codes: ["Space"], cap: "Space", wide: true },
+    msl: { codes: ["KeyQ", "KeyE", "Mouse0"], cap: "Q", alt: "E" },
+    R: { codes: ["KeyR"], cap: "R" },
+    X: { codes: ["KeyX"], cap: "X" },
+    V: { codes: ["KeyV"], cap: "V" },
+    T: { codes: ["KeyT"], cap: "T" },
+  };
+  const hold = (k, label) => ({ k, how: "hold", label });
+  const tap = (k, label) => ({ k, how: "tap", label });
+  const noseUpKey = () => (settings.invert ? KEYDEF.W : KEYDEF.S);
+  const noseDownKey = () => (settings.invert ? KEYDEF.S : KEYDEF.W);
+  const RAD = 180 / Math.PI;
+
+  // Flight numbers the coach talks about, in the units the HUD shows.
+  const fd = { kt: 0, ft: 0, agl: 0, pitch: 0, bank: 0, hdg: 0, fpm: 0, gamma: 0 };
+  function readFlight() {
+    const P = player;
+    const f = fwdOf(P.quat, tmpV), r = rightOf(P.quat, tmpV2), u = upOf(P.quat, tmpV3);
+    fd.pitch = Math.asin(clamp(f.y, -1, 1)) * RAD;
+    fd.hdg = P.onGround ? (((P.hdg * RAD) % 360) + 360) % 360 : headingOf(f) * RAD;
+    fd.bank = Math.atan2(-r.y, u.y) * RAD; // positive = right wing down
+    const V = P.vel.length();
+    fd.kt = V * MS_TO_KT;
+    fd.ft = P.pos.y * M_TO_FT;
+    fd.agl = (P.pos.y - surfaceHeight(P.pos.x, P.pos.z)) * M_TO_FT - (P.onGround ? JET.gearHeight * M_TO_FT : 0);
+    fd.fpm = P.vel.y * 196.85;
+    fd.gamma = V > 5 ? Math.asin(clamp(P.vel.y / V, -1, 1)) * RAD : 0;
+  }
+  const fmt = (n) => Math.round(n).toLocaleString("en-US");
+  const hdg3 = (d) => String(Math.round(((d % 360) + 360) % 360) % 360).padStart(3, "0");
+  const angDiff = (a, b) => ((((a - b) % 360) + 540) % 360) - 180; // a - b in -180..180
+
+  // Small "which key now" helpers shared by the lessons.
+  // Both look a moment ahead, so the coach says "let go" before you overshoot.
+  function pitchTo(target, tol) {
+    const p = fd.pitch + player.pitch * RAD * 0.3 * Math.cos(fd.bank / RAD);
+    if (p < target - tol) return [hold(noseUpKey(), p < target - 6 ? "Raise the nose" : "Nose up a little")];
+    if (p > target + tol) return [hold(noseDownKey(), p > target + 6 ? "Lower the nose" : "Nose down a little")];
+    return [];
+  }
+  function bankTo(target, tol) {
+    const b = fd.bank + player.roll * RAD * 0.3;
+    if (b < target - tol) return [hold(KEYDEF.D, target - b > 20 ? "Roll right" : "Roll right a little")];
+    if (b > target + tol) return [hold(KEYDEF.A, b - target > 20 ? "Roll left" : "Roll left a little")];
+    return [];
+  }
+  // Wings level first, then the nose on the horizon.
+  const levelKeys = (bt = 4, pt = 3) => [...bankTo(0, bt), ...(Math.abs(fd.bank) < 25 ? pitchTo(0, pt) : [])];
+  function throttleTo(lo, hi, upLabel = "Throttle up", dnLabel = "Throttle back") {
+    const P = player;
+    if (P.throttle < lo) return [hold(KEYDEF.thrUp, upLabel)];
+    if (P.throttle > hi) return [hold(KEYDEF.thrDn, dnLabel)];
+    return [];
+  }
+  const bankWord = () => (Math.abs(fd.bank) < 4 ? "wings level" : `${Math.round(Math.abs(fd.bank))}° bank ${fd.bank > 0 ? "right" : "left"}`);
+  const pitchWord = () => (Math.abs(fd.pitch) < 1.5 ? "nose on the horizon" : `nose ${Math.round(Math.abs(fd.pitch))}° ${fd.pitch > 0 ? "up" : "down"}`);
+
+  // Where a target sits relative to the nose: angle off, and which way to roll.
+  const aimRel = V3(), aimQ = new T.Quaternion();
+  function aimAt(t, lead) {
+    const P = player;
+    const dist = t.pos.distanceTo(P.pos);
+    aimRel.copy(t.pos);
+    if (lead) {
+      const tof = dist / BULLET_SPEED;
+      aimRel.addScaledVector(t.vel, tof).addScaledVector(P.vel, -tof);
+      aimRel.y += 0.5 * GRAV * tof * tof; // the bullets drop a little on the way
+    }
+    aimRel.sub(P.pos).applyQuaternion(aimQ.copy(P.quat).invert());
+    const d = Math.max(aimRel.length(), 1);
+    return { dist, ang: Math.acos(clamp(-aimRel.z / d, -1, 1)), phi: Math.atan2(aimRel.x, aimRel.y), x: aimRel.x / d, y: aimRel.y / d };
+  }
+  function chaseKeys(t, gun) {
+    const P = player;
+    const a = aimAt(t, gun);
+    const out = [];
+    let say;
+    if (a.ang > 0.35 || (a.ang > 0.1 && Math.abs(a.phi) < 2.3)) {
+      // Far off the nose: roll so the target is "above" you, then pull toward it.
+      if (Math.abs(a.phi) > 0.4) out.push(hold(a.phi > 0 ? KEYDEF.D : KEYDEF.A, a.phi > 0 ? "Roll right toward it" : "Roll left toward it"));
+      if (Math.abs(a.phi) < 1.2) out.push(hold(noseUpKey(), "Pull the nose onto it"));
+      say = Math.abs(a.phi) > 0.4 ? `It's ${a.phi > 0 ? "right" : "left"} of you: roll ${a.phi > 0 ? "right" : "left"} until it's above your nose, then pull.` : "It's above your nose: pull to bring it down onto the gunsight.";
+    } else if (a.ang > 0.1) {
+      out.push(hold(noseDownKey(), "Push the nose down to it"));
+      say = "It's just below your nose: push the nose down a little.";
+    } else {
+      const tol = gun ? 0.006 : 0.03;
+      if (Math.abs(a.x) > tol) out.push(hold(a.x > 0 ? KEYDEF.C : KEYDEF.Z, a.x > 0 ? "Nudge the nose right" : "Nudge the nose left"));
+      if (a.y > tol) out.push(hold(noseUpKey(), "Nudge the nose up"));
+      else if (a.y < -tol) out.push(hold(noseDownKey(), "Nudge the nose down"));
+      say = "Almost there: small nudges to center it.";
+    }
+    if (a.dist > 1500 && P.throttle < 0.98) out.push(hold(KEYDEF.thrUp, "Speed up to close in"));
+    else if (a.dist < 400 && P.vel.length() > t.vel.length() && P.throttle > 0.3) out.push(hold(KEYDEF.thrDn, "Too close: slow down"));
+    return { keys: out, a, say };
+  }
+
+  const steady = (cond, secs) => {
+    training.holdT = cond ? training.holdT + training.dt : 0;
+    return training.holdT >= secs;
+  };
+  const noKeys = (...k) => !k.some((d) => isDown(...d.codes));
+  const onRunwayAligned = (P) => {
+    const p = pavedAt(P.pos.x, P.pos.z);
+    return !!p && p.kind === "runway" && p.field === HOME && Math.abs(wrapPi(P.hdg)) < 0.2 && Math.abs(P.pos.x - HOME.x) < 12;
+  };
+  const airborneOK = (P) => !P.onGround && fd.agl > 2500 && !P.stall && P.vel.length() > 120;
+
+  // Landing approach geometry: runway 18 at home (flying south over flat ground from the
+  // north), touchdown zone 300 m past the north threshold.
+  const TD_Z = HOME.z - HOME.len / 2 + 300;
+  const GLIDE = Math.tan((2.5 * Math.PI) / 180);
+  function approach() {
+    const P = player;
+    const dz = TD_Z - P.pos.z; // distance to go (m), positive while north of the touchdown point
+    const want = HOME.elev + JET.gearHeight + Math.max(dz, 0) * GLIDE;
+    // Heading south, the pilot's right is west (-x).
+    return { dz, err: P.pos.y - want, off: HOME.x - P.pos.x, vx: -P.vel.x };
+  }
+
+  const LESSONS = [
+    {
+      title: "Engine start & taxi",
+      blurb: "Start the engine, release the brakes and steer onto the runway.",
+      setup: "ground",
+      steps: [
+        {
+          text: "Welcome, pilot! The engine is starting on its own. <b>No keys needed yet</b>: watch the RPM number rise at the bottom left of the screen.",
+          keys: () => [],
+          now: (P) => (P.rpm > 0.55 ? "Engine running at idle." : `Engine spooling up: ${Math.round(P.rpm * 100)}% RPM, idle is 60%.`),
+          prog: (P) => ({ v: P.rpm / 0.6, label: `RPM ${Math.round(P.rpm * 100)}%` }),
+          done: (P) => P.rpm > 0.58,
+        },
+        {
+          text: "Add a little power. <b>Hold Shift</b> until the throttle reads about <b>20%</b>, then let go. Adding power releases the parking brake.",
+          keys: (P) => (P.throttle < 0.17 ? [hold(KEYDEF.thrUp, "Throttle up to 20%")] : P.throttle > 0.32 ? [hold(KEYDEF.thrDn, "Too much: ease back")] : []),
+          now: (P) => (P.throttle < 0.17 ? `Throttle at ${Math.round(P.throttle * 100)}%. Keep holding Shift.` : P.vel.length() < 1 ? "Good, let go of Shift. The jet is starting to creep forward." : `Rolling forward at ${Math.round(fd.kt)} kt.`),
+          prog: (P) => ({ v: P.throttle / 0.2, label: `THR ${Math.round(P.throttle * 100)}%` }),
+          done: (P) => P.vel.length() > 2.5,
+        },
+        {
+          text: "Steer onto the runway. On the ground, <b>A</b> and <b>D</b> turn the nose wheel left and right. Taxi to the runway, then turn left and line up on the white centre line.",
+          keys: (P) => {
+            const out = [];
+            const dx = HOME.x - P.pos.x;
+            const want = Math.abs(dx) > 16 ? (dx > 0 ? 90 : 270) : (headingOf(tmpV.set(dx, 0, -35)) * RAD);
+            const err = angDiff(want, fd.hdg);
+            if (err > 4) out.push(hold(KEYDEF.D, "Steer right"));
+            else if (err < -4) out.push(hold(KEYDEF.A, "Steer left"));
+            const v = P.vel.length();
+            if (v > 11) out.push(hold(KEYDEF.B, "Brake: you're taxiing too fast"));
+            if (P.throttle > 0.3) out.push(hold(KEYDEF.thrDn, "Less power"));
+            else if (v < 2 && P.throttle < 0.15) out.push(hold(KEYDEF.thrUp, "A little more power"));
+            return out;
+          },
+          now: (P) => {
+            const dx = HOME.x - P.pos.x;
+            if (Math.abs(dx) > 16) return `Taxiing at ${Math.round(fd.kt)} kt. The runway is ${Math.round(Math.abs(dx))} m ahead.`;
+            return `On the runway, heading ${hdg3(fd.hdg)}°. Line up with the centre line, heading 360°.`;
+          },
+          done: (P) => onRunwayAligned(P),
+        },
+      ],
+    },
+    {
+      title: "Takeoff & climb",
+      blurb: "Full power, rotate at 140 kt, raise the gear and flaps, and climb.",
+      setup: "runway",
+      fits: (P) => P.onGround && onRunwayAligned(P) && P.engineOn,
+      steps: [
+        {
+          text: "Lined up and ready. <b>Hold Shift</b> all the way to <b>100%</b> throttle. Past 90% the afterburner lights with a roar.",
+          keys: (P) => (P.throttle < 0.97 ? [hold(KEYDEF.thrUp, "Full power")] : []),
+          now: (P) => `Throttle ${Math.round(P.throttle * 100)}%${P.ab > 0.1 ? ", afterburner lit" : ""}. Speed ${Math.round(fd.kt)} kt.`,
+          prog: (P) => ({ v: P.throttle, label: `THR ${Math.round(P.throttle * 100)}%` }),
+          done: (P) => P.throttle > 0.97,
+        },
+        {
+          text: "You're accelerating down the runway. Hands off the stick for now. At <b>140 kt</b>, <b>hold S</b> to raise the nose and lift off.",
+          keys: (P) => {
+            const out = P.throttle < 0.95 ? [hold(KEYDEF.thrUp, "Keep full power")] : [];
+            if (fd.kt > 132 || !P.onGround) out.unshift(...pitchTo(10, 3).map((k) => ({ ...k, label: k.k === noseUpKey() ? "Rotate: nose up to 10°" : k.label })));
+            else out.push({ k: noseUpKey(), how: "soon", label: "At 140 kt: raise the nose" });
+            return out;
+          },
+          now: (P) => (P.onGround ? (fd.kt < 132 ? `Rolling at ${Math.round(fd.kt)} kt. Wait for 140 kt.` : `${Math.round(fd.kt)} kt: rotate now! Nose ${Math.round(fd.pitch)}° up.`) : `Lifting off! ${Math.round(fd.agl)} ft above the runway.`),
+          prog: (P) => ({ v: fd.kt / 140, label: `${Math.round(fd.kt)} / 140 kt` }),
+          done: (P) => !P.onGround && fd.agl > 50,
+        },
+        {
+          text: "You're flying! Hold the nose about <b>10° up</b> and <b>tap G</b> to raise the landing gear.",
+          keys: (P) => [...(P.gearCmd ? [tap(KEYDEF.G, "Gear up")] : []), ...pitchTo(10, 4)],
+          now: () => `Climbing through ${fmt(fd.agl)} ft at ${Math.round(fd.kt)} kt, ${pitchWord()}.`,
+          done: (P) => P.gearCmd === 0,
+        },
+        {
+          text: "Gear coming up. Now <b>tap F</b> to raise the flaps so the jet can go faster.",
+          keys: (P) => [...(P.flapCmd ? [tap(KEYDEF.F, "Flaps up")] : []), ...pitchTo(10, 4)],
+          now: (P) => `Gear ${P.gearPos < 0.02 ? "up" : "in transit"}. Climbing through ${fmt(fd.agl)} ft at ${Math.round(fd.kt)} kt.`,
+          done: (P) => P.flapCmd === 0,
+        },
+        {
+          text: "Climb to <b>3,000 ft</b>. On the way, <b>hold Ctrl</b> to ease the throttle back to about <b>85%</b>. That turns off the thirsty afterburner.",
+          keys: (P) => [...throttleTo(0.75, 0.9, "Throttle up to 85%", "Throttle back to 85%"), ...pitchTo(10, 4)],
+          now: (P) => `Altitude ${fmt(fd.ft)} ft of 3,000. Throttle ${Math.round(P.throttle * 100)}%${P.ab > 0.1 ? " (afterburner on)" : ""}.`,
+          prog: () => ({ v: fd.ft / 3000, label: `${fmt(fd.ft)} / 3,000 ft` }),
+          done: (P) => fd.ft > 3000 && P.throttle <= 0.9 && P.throttle >= 0.72,
+        },
+        {
+          text: "Level off: <b>hold W</b> to lower the nose until it sits on the horizon line, then let go.",
+          keys: () => pitchTo(0, 2.5),
+          now: () => `${pitchWord()[0].toUpperCase() + pitchWord().slice(1)}, climbing ${fmt(Math.max(0, fd.fpm))} ft/min.`,
+          done: () => steady(Math.abs(fd.pitch) < 3.5, 1.5),
+        },
+      ],
+    },
+    {
+      title: "Nose up & nose down",
+      blurb: "S raises the nose, W lowers it. Learn to hold level flight.",
+      setup: "air",
+      fits: airborneOK,
+      steps: [
+        {
+          text: "Let go of every key. The jet flies straight and level <b>on its own</b>, so there's nothing to fight.",
+          keys: () => [],
+          now: () => `Flying at ${Math.round(fd.kt)} kt, ${fmt(fd.ft)} ft, ${pitchWord()}.`,
+          done: () => training.stepT > 3.5,
+        },
+        {
+          text: "<b>S raises the nose</b>, like pulling a stick toward you. <b>Hold S</b> until the nose is <b>10° up</b>. The numbers on the HUD ladder show the angle.",
+          keys: () => (fd.pitch < 10 ? [hold(noseUpKey(), "Raise the nose to 10°")] : []),
+          now: () => `${pitchWord()[0].toUpperCase() + pitchWord().slice(1)}. ${fd.fpm > 300 ? `Climbing ${fmt(fd.fpm)} ft/min.` : ""}`,
+          prog: () => ({ v: fd.pitch / 10, label: `Nose ${Math.round(fd.pitch)}° / 10°` }),
+          done: () => fd.pitch >= 9.5,
+        },
+        {
+          text: "Now <b>let go</b>. The nose stays where you left it and the jet keeps climbing.",
+          keys: () => [],
+          now: () => `Climbing ${fmt(Math.max(fd.fpm, 0))} ft/min through ${fmt(fd.ft)} ft.`,
+          done: () => steady(noKeys(KEYDEF.S, KEYDEF.W), 2.5),
+        },
+        {
+          text: "<b>W lowers the nose</b>, like pushing the stick away. <b>Hold W</b> until the nose is <b>5° down</b>.",
+          keys: () => (fd.pitch > -5 ? [hold(noseDownKey(), "Lower the nose to 5° down")] : []),
+          now: () => `${pitchWord()[0].toUpperCase() + pitchWord().slice(1)}.${fd.fpm < -300 ? ` Descending ${fmt(-fd.fpm)} ft/min.` : ""}`,
+          prog: () => ({ v: clamp((10 - fd.pitch) / 15, 0, 1), label: `Nose ${Math.round(fd.pitch)}° / −5°` }),
+          done: () => fd.pitch <= -4.5,
+        },
+        {
+          text: "Level off: put the nose <b>on the horizon</b> (within 2°) and keep it there for 2 seconds. Use small taps.",
+          keys: () => pitchTo(0, 1.5),
+          now: () => `${pitchWord()[0].toUpperCase() + pitchWord().slice(1)}. ${Math.abs(fd.pitch) < 2 ? "Hold it there…" : ""}`,
+          prog: () => ({ v: training.holdT / 2, label: "Hold level" }),
+          done: () => steady(Math.abs(fd.pitch) < 2.5, 2),
+        },
+      ],
+    },
+    {
+      title: "Roll & turn",
+      blurb: "A and D tilt the wings. Bank, then pull with S to turn.",
+      setup: "air",
+      fits: airborneOK,
+      steps: [
+        {
+          text: "<b>D rolls right</b>. <b>Hold D</b> until the wings tilt <b>45° right</b>, then let go. The wings stay where you leave them.",
+          keys: () => (fd.bank + player.roll * RAD * 0.3 < 44 ? [hold(KEYDEF.D, "Roll right to 45°")] : fd.bank > 70 ? [hold(KEYDEF.A, "Too far, back a bit")] : []),
+          now: () => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}.`,
+          prog: () => ({ v: fd.bank / 45, label: `Bank ${Math.round(fd.bank)}° / 45° right` }),
+          done: () => fd.bank > 40,
+        },
+        {
+          text: "Roll back to <b>wings level</b> with <b>A</b>. Let go when the horizon line is flat.",
+          keys: () => levelKeys(),
+          now: () => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}. The jet slowly turns while it's banked.`,
+          done: () => steady(Math.abs(fd.bank) < 6, 1),
+        },
+        {
+          text: "<b>A rolls left</b>. <b>Hold A</b> until the wings tilt <b>45° left</b>.",
+          keys: () => (fd.bank + player.roll * RAD * 0.3 > -44 ? [hold(KEYDEF.A, "Roll left to 45°")] : fd.bank < -70 ? [hold(KEYDEF.D, "Too far, back a bit")] : []),
+          now: () => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}.`,
+          prog: () => ({ v: -fd.bank / 45, label: `Bank ${Math.round(-fd.bank)}° / 45° left` }),
+          done: () => fd.bank < -40,
+        },
+        {
+          text: "And back to <b>wings level</b> with <b>D</b>.",
+          keys: () => levelKeys(),
+          now: () => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}.`,
+          done: () => steady(Math.abs(fd.bank) < 6, 1),
+        },
+        {
+          text: "Real turns: <b>bank about 70° right with D</b>, then <b>hold S</b> to pull the nose around. Turn until you face the heading shown below, then roll out.",
+          enter: (d) => (d.target = (fd.hdg + 90) % 360),
+          keys: (P, d) => {
+            const err = angDiff(d.target, fd.hdg);
+            if (err < 25) return bankTo(0, 5).map((k) => ({ ...k, label: "Roll out: wings level" }));
+            const out = fd.bank + player.roll * RAD * 0.3 < 64 ? [hold(KEYDEF.D, "Bank right to 70°")] : fd.bank > 82 ? [hold(KEYDEF.A, "Too steep: ease back")] : [];
+            if (fd.bank > 55 && fd.pitch < 12) out.push(hold(noseUpKey(), "Pull to turn"));
+            return out;
+          },
+          now: (P, d) => {
+            const err = angDiff(d.target, fd.hdg);
+            return err < 25 ? `Heading ${hdg3(fd.hdg)}°: almost there, roll the wings level.` : `Heading ${hdg3(fd.hdg)}°, turning to ${hdg3(d.target)}°. ${Math.round(err)}° to go, ${bankWord()}.`;
+          },
+          prog: (P, d) => ({ v: 1 - clamp(angDiff(d.target, fd.hdg), 0, 90) / 90, label: `Turn to ${hdg3(d.target)}°` }),
+          done: (P, d) => angDiff(d.target, fd.hdg) < 25 && Math.abs(fd.bank) < 20,
+        },
+        {
+          text: "Nice turn! Wings level again and the nose on the horizon. That's all there is to flying a turn.",
+          keys: () => levelKeys(),
+          now: () => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}, ${pitchWord()}.`,
+          done: () => steady(Math.abs(fd.bank) < 6 && Math.abs(fd.pitch) < 4, 1),
+        },
+      ],
+    },
+    {
+      title: "Speed & afterburner",
+      blurb: "Shift adds power, Ctrl takes it away. Speed up, slow down, cruise.",
+      setup: "air",
+      fits: airborneOK,
+      steps: [
+        {
+          text: "<b>Hold Shift</b> to <b>100%</b> to light the afterburner, and keep the nose level. Watch the speed tape on the left climb to <b>500 kt</b>.",
+          keys: (P) => [...(P.throttle < 0.97 ? [hold(KEYDEF.thrUp, "Full afterburner")] : []), ...levelKeys(5, 4)],
+          now: (P) => `${Math.round(fd.kt)} kt and accelerating${P.ab > 0.1 ? " on afterburner" : ""}. Throttle ${Math.round(P.throttle * 100)}%.`,
+          prog: () => ({ v: (fd.kt - 380) / 120, label: `${Math.round(fd.kt)} / 500 kt` }),
+          done: () => fd.kt >= 500,
+        },
+        {
+          text: "Fast! Now <b>hold Ctrl</b> to pull the throttle back to about <b>40%</b> and let the speed drop to <b>380 kt</b>.",
+          keys: (P) => [...throttleTo(0.3, 0.45, "Not that low: 40%", "Throttle back to 40%"), ...levelKeys(5, 4)],
+          now: (P) => `${Math.round(fd.kt)} kt and ${fd.kt > 395 ? "slowing" : "nearly there"}. Throttle ${Math.round(P.throttle * 100)}%.`,
+          prog: () => ({ v: (500 - fd.kt) / 120, label: `${Math.round(fd.kt)} → 380 kt` }),
+          done: () => fd.kt <= 380,
+        },
+        {
+          text: "Set cruise power: about <b>80%</b> throttle. That holds a steady speed without burning much fuel.",
+          keys: () => [...throttleTo(0.75, 0.86, "Throttle up to 80%", "Throttle back to 80%"), ...levelKeys(5, 4)],
+          now: (P) => `Throttle ${Math.round(P.throttle * 100)}%, ${Math.round(fd.kt)} kt.`,
+          done: (P) => steady(P.throttle >= 0.74 && P.throttle <= 0.87, 0.8),
+        },
+        {
+          text: "Try the cockpit view: <b>tap V</b> to sit inside the jet, then <b>tap V</b> again to come back outside.",
+          enter: (d) => (d.views = 0),
+          keys: () => [tap(KEYDEF.V, view === "chase" ? "Cockpit view" : "Back outside")],
+          now: () => (view === "cockpit" ? "Cockpit view: the HUD and instruments are right in front of you." : "Chase view: the camera follows behind the jet."),
+          done: (P, d) => d.views >= 2,
+        },
+      ],
+    },
+    {
+      title: "Guns",
+      blurb: "Chase a practice drone, put it in the gunsight and fire.",
+      setup: "air",
+      fits: airborneOK,
+      drone: 900,
+      steps: [
+        {
+          text: "That red box ahead is a <b>practice drone</b>. It can't shoot back. <b>Tap R</b> to select it as your target.",
+          keys: (P) => (P.designated === training.drone ? [] : [tap(KEYDEF.R, "Select target")]),
+          now: () => (training.drone ? `Drone ${(training.drone.pos.distanceTo(player.pos) / 1000).toFixed(1)} km ahead.` : ""),
+          done: (P) => !!training.drone && P.designated === training.drone,
+        },
+        {
+          text: "Fly the <b>gun circle</b> (the small ring in the middle of the HUD) onto the drone. The key bar tells you which way to steer. When it says FIRE, <b>hold Space</b> in short bursts.",
+          keys: () => {
+            const t = training.drone;
+            if (!t || !t.alive) return [];
+            const c = chaseKeys(t, true);
+            if (c.a.ang < 0.03 && c.a.dist < 1200) c.keys.unshift(hold(KEYDEF.gun, "FIRE!"));
+            return c.keys;
+          },
+          now: () => {
+            const t = training.drone;
+            if (!t || !t.alive) return "Target destroyed!";
+            const c = chaseKeys(t, true);
+            const where = `Drone ${(c.a.dist / 1000).toFixed(1)} km, ${Math.round(c.a.ang * RAD)}° off your nose. `;
+            if (c.a.ang < 0.03 && c.a.dist < 1200) return where + "In the sights: fire!";
+            if (c.a.dist > 1200 && c.a.ang < 0.1) return where + "Lined up, but get within 1.2 km to fire.";
+            return where + c.say;
+          },
+          prog: () => (training.drone ? { v: 1 - training.drone.hp / 40, label: "Drone damage" } : null),
+          done: () => training.droneKilled,
+        },
+      ],
+    },
+    {
+      title: "Missiles & lock-on",
+      blurb: "Keep the target near your nose until the tone locks, then fire.",
+      setup: "air",
+      fits: airborneOK,
+      drone: 2600,
+      steps: [
+        {
+          text: "Another drone, farther out. <b>Tap R</b> to select it.",
+          keys: (P) => (P.designated === training.drone ? [] : [tap(KEYDEF.R, "Select target")]),
+          now: () => (training.drone ? `Drone ${(training.drone.pos.distanceTo(player.pos) / 1000).toFixed(1)} km away.` : ""),
+          done: (P) => !!training.drone && P.designated === training.drone,
+        },
+        {
+          text: "Point your nose at the drone and keep it there. The box turns amber and growls while the missile <b>searches</b>, then red with a steady tone when it's <b>locked</b>. Then <b>tap Q</b> (or E, or click) to fire.",
+          keys: (P) => {
+            const t = training.drone;
+            if (!t || !t.alive) return [];
+            if (missiles.some((m) => m.alive && m.owner === "player" && m.target === t)) return [];
+            const c = chaseKeys(t, false);
+            if (P.lock === 2) return [tap(KEYDEF.msl, "FIRE MISSILE!")];
+            if (c.a.dist < 300) return [hold(KEYDEF.thrDn, "Too close for a missile: back off")];
+            return c.keys;
+          },
+          now: (P) => {
+            const t = training.drone;
+            if (!t || !t.alive) return "Target destroyed!";
+            if (missiles.some((m) => m.alive && m.owner === "player" && m.target === t)) return "Missile away and tracking. Watch it go!";
+            const c = chaseKeys(t, false);
+            const where = `Drone ${(c.a.dist / 1000).toFixed(1)} km, ${Math.round(c.a.ang * RAD)}° off your nose. `;
+            if (P.lock === 2) return where + "LOCKED: fire now!";
+            if (P.lock === 1) return where + "Searching… keep it steady on the nose.";
+            if (c.a.ang < 0.4) return where + "Hold it near the nose for a lock.";
+            return where + c.say;
+          },
+          prog: (P) => ({ v: P.lock === 2 ? 1 : P.lock === 1 ? clamp(P.lockTime, 0, 1) * 0.9 : 0, label: P.lock === 2 ? "LOCKED" : P.lock === 1 ? "Locking…" : "No lock" }),
+          done: () => training.droneKilled,
+        },
+      ],
+    },
+    {
+      title: "Flares & breaking away",
+      blurb: "Drop flares with X and fly a hard break turn to dodge missiles.",
+      setup: "air",
+      fits: airborneOK,
+      steps: [
+        {
+          text: "When an enemy fires at you the screen flashes <b>MISSILE</b> and a warning tone screams. Your first move: <b>tap X</b> to drop flares, hot decoys that pull missiles away. Drop them twice.",
+          enter: (d) => (d.drops = 0),
+          keys: () => [tap(KEYDEF.X, "Drop flares")],
+          now: (P, d) => (d.drops ? `Flares away! ${d.drops} of 2.` : "Flares ready."),
+          prog: (P, d) => ({ v: d.drops / 2, label: `Flares ${d.drops} / 2` }),
+          done: (P, d) => d.drops >= 2,
+        },
+        {
+          text: "Then <b>break</b>: bank hard (about 70°) with <b>D</b> and <b>hold S</b> to pull a tight turn. Keep pulling for 3 seconds. Feel the G build up.",
+          keys: (P) => {
+            const out = fd.bank < 60 ? [hold(KEYDEF.D, "Bank hard right")] : fd.bank > 85 ? [hold(KEYDEF.A, "Too steep: ease back")] : [];
+            if (fd.bank > 40) out.push(hold(noseUpKey(), "Pull hard"));
+            return out;
+          },
+          now: (P) => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}, pulling ${P.gSmooth.toFixed(1)} G.`,
+          prog: () => ({ v: training.holdT / 3, label: "Break turn" }),
+          done: (P) => steady(fd.bank > 45 && P.inPitch > 0.5, 3),
+        },
+        {
+          text: "Missile dodged! Roll <b>wings level</b> and bring the nose back to the horizon.",
+          keys: () => levelKeys(5, 3),
+          now: () => `${bankWord()[0].toUpperCase() + bankWord().slice(1)}, ${pitchWord()}.`,
+          done: () => steady(Math.abs(fd.bank) < 7 && Math.abs(fd.pitch) < 4, 1),
+        },
+      ],
+    },
+    {
+      title: "Landing",
+      blurb: "Gear and flaps down, follow the glide path, flare and brake.",
+      setup: "final",
+      steps: [
+        {
+          text: "You're on a long final approach to home base, the runway straight ahead. First, <b>tap G</b> to lower the landing gear.",
+          keys: (P) => [...(P.gearCmd ? [] : [tap(KEYDEF.G, "Gear down")]), ...approachKeys(true)],
+          now: (P) => `${Math.round(fd.kt)} kt, ${fmt(fd.agl)} ft above the ground. Gear ${P.gearCmd ? "coming down" : "up"}.`,
+          done: (P) => P.gearCmd === 1,
+        },
+        {
+          text: "Now <b>tap F</b> for landing flaps. They give more lift so you can fly slower.",
+          keys: (P) => [...(P.flapCmd ? [] : [tap(KEYDEF.F, "Flaps down")]), ...approachKeys(true)],
+          now: (P) => `Gear ${P.gearPos > 0.98 ? "down and locked" : "in transit"}. ${Math.round(fd.kt)} kt.`,
+          done: (P) => P.flapCmd === 1,
+        },
+        {
+          text: "Fly the approach. Keep the runway centred, sink gently toward its start, and hold about <b>150 kt</b>. Just follow the key bar: small taps.",
+          keys: () => approachKeys(false),
+          now: (P) => approachNow(),
+          prog: () => ({ v: 1 - clamp(approach().dz / 5600, 0, 1), label: `${(Math.max(approach().dz, 0) / 1000).toFixed(1)} km to touchdown` }),
+          done: (P) => P.onGround || fd.agl < 60,
+        },
+        {
+          text: "Almost down! Keep the wings level and <b>gently hold S</b> to raise the nose a touch so the wheels kiss the runway. Just before touchdown, <b>Ctrl</b> to idle.",
+          keys: (P) => {
+            if (fd.agl > 70) return approachKeys(false);
+            const out = [...bankTo(0, 3)];
+            if (fd.fpm < (fd.agl < 25 ? -400 : -600)) out.push(hold(noseUpKey(), "Flare: ease the nose up"));
+            else if (fd.fpm > -120 && fd.agl > 6) out.push(hold(noseDownKey(), "Don't float: nose down a touch"));
+            if (fd.agl < 15 && P.throttle > 0.02) out.push(hold(KEYDEF.thrDn, "Throttle to idle"));
+            else if (fd.agl >= 15 && fd.kt < 130 && P.throttle < 0.8) out.push(hold(KEYDEF.thrUp, "Too slow: a bit more power"));
+            return out;
+          },
+          now: () => `${fmt(fd.agl)} ft, sinking ${fmt(Math.max(0, -fd.fpm))} ft/min (land under 900), ${Math.round(fd.kt)} kt.`,
+          done: (P) => P.onGround,
+        },
+        {
+          text: "Touchdown! Let go of S. <b>Ctrl</b> to idle and <b>hold B</b> to brake to a full stop.",
+          keys: (P) => (P.vel.length() < 0.5 ? [] : [...(P.throttle > 0 ? [hold(KEYDEF.thrDn, "Throttle to idle")] : []), hold(KEYDEF.B, "Brake")]),
+          now: () => `Rolling out at ${Math.round(fd.kt)} kt.`,
+          prog: () => ({ v: 1 - fd.kt / 150, label: `${Math.round(fd.kt)} kt` }),
+          done: (P) => P.onGround && P.vel.length() < 0.5,
+        },
+      ],
+    },
+    {
+      title: "Free flight",
+      blurb: "No goals and no limits. Fly around and practise anything. T spawns a drone.",
+      setup: "air",
+      fits: (P) => !P.onGround && P.alive,
+      free: true,
+      steps: [
+        {
+          text: "Free flight! Fly anywhere and practise as long as you like. Fuel and ammo never run out. <b>Tap T</b> to spawn a practice drone, <b>L</b> to pick a lesson.",
+          keys: () => freeKeys(),
+          now: (P) => (P.onGround ? `On the ground at ${Math.round(fd.kt)} kt.` : `${Math.round(fd.kt)} kt at ${fmt(fd.ft)} ft, heading ${hdg3(fd.hdg)}°, ${bankWord()}, ${pitchWord()}.`),
+          done: () => false,
+        },
+      ],
+    },
+  ];
+
+  function approachKeys(early) {
+    const P = player;
+    const ap = approach();
+    const out = [];
+    // Centre line: bank gently toward it, more the farther off you are.
+    const wantBank = clamp(-(ap.off * 0.4 + ap.vx * 2.2), -12, 12);
+    out.push(...bankTo(wantBank, 3));
+    // Glide path: aim for about a 3° descent, steeper when high, shallower when low.
+    const wantGamma = -2.5 + clamp(-ap.err * 0.08, -2.5, 2.5);
+    const gamma = fd.gamma + P.pitch * RAD * 0.4;
+    if (gamma < wantGamma - 0.8) out.push(hold(noseUpKey(), ap.err < -10 ? "Too low: nose up" : "Nose up a touch"));
+    else if (gamma > wantGamma + 0.8) out.push(hold(noseDownKey(), ap.err > 10 ? "Too high: nose down" : "Nose down a touch"));
+    // Speed.
+    if (!early || P.flapCmd) {
+      if (fd.kt > 160 && P.throttle > 0) out.push(hold(KEYDEF.thrDn, "Too fast: less power"));
+      else if (fd.kt < 140 && P.throttle < 0.9) out.push(hold(KEYDEF.thrUp, "Too slow: more power"));
+    }
+    return out;
+  }
+  function approachNow() {
+    const ap = approach();
+    const ft = ap.err * M_TO_FT;
+    const vert = Math.abs(ft) < 40 ? "on the glide path" : ft > 0 ? `${fmt(ft)} ft high` : `${fmt(-ft)} ft low`;
+    const lat = Math.abs(ap.off) < 6 ? "on the centre line" : `${Math.round(Math.abs(ap.off))} m ${ap.off > 0 ? "right" : "left"} of the centre line`;
+    return `${(Math.max(ap.dz, 0) / 1000).toFixed(1)} km to go, ${vert}, ${lat}, ${Math.round(fd.kt)} kt.`;
+  }
+  function freeKeys() {
+    const P = player;
+    if (P.stall) return [hold(noseDownKey(), "Stall: lower the nose"), hold(KEYDEF.thrUp, "More power")];
+    if (P.onGround) {
+      if (P.vel.length() < 3) return [hold(KEYDEF.thrUp, "Throttle up to move"), hold(KEYDEF.A, "Steer left"), hold(KEYDEF.D, "Steer right")];
+      if (fd.kt > 132) return [hold(noseUpKey(), "Rotate: nose up"), hold(KEYDEF.thrUp, "Power")];
+      return [hold(KEYDEF.thrUp, "Full power to take off"), hold(KEYDEF.B, "Brake")];
+    }
+    if (P.gearCmd && fd.agl > 600 && fd.kt > 200) return [tap(KEYDEF.G, "Raise the gear")];
+    const t = fighters.find((f) => f.alive && f.drone);
+    if (t) {
+      const out = [tap(KEYDEF.R, "Select target"), hold(KEYDEF.gun, "Guns")];
+      out.push(P.lock === 2 ? tap(KEYDEF.msl, "Missile: locked!") : tap(KEYDEF.msl, "Missile"));
+      return out;
+    }
+    return [hold(noseUpKey(), "Nose up"), hold(noseDownKey(), "Nose down"), hold(KEYDEF.A, "Roll left"), hold(KEYDEF.D, "Roll right"), hold(KEYDEF.thrUp, "Faster"), hold(KEYDEF.thrDn, "Slower"), tap(KEYDEF.T, "Spawn a drone")];
+  }
+  // Safety net over the airborne lessons: stalls, the ground and the edge of the map come first.
+  let tooLow = false;
+  function safetyKeys() {
+    const P = player;
+    if (P.onGround) return null;
+    if (P.stall) return { keys: [hold(noseDownKey(), "Lower the nose"), hold(KEYDEF.thrUp, "More power")], now: "STALL! The wings lost their grip on the air. Lower the nose and add power to recover." };
+    tooLow = fd.agl < (tooLow ? 2200 : 1500) || pullUpWarn;
+    if (tooLow) {
+      const keys = Math.abs(fd.bank) > 20 ? bankTo(0, 10).map((k) => ({ ...k, label: "Level the wings" })) : pitchTo(12, 3).map((k) => ({ ...k, label: k.k === noseUpKey() ? "PULL UP: climb" : k.label }));
+      if (P.throttle < 0.85) keys.push(hold(KEYDEF.thrUp, "More power"));
+      return { keys, now: `Too low! ${fmt(fd.agl)} ft above the ground. Level the wings and climb above 2,000 ft.`, low: true };
+    }
+    const edge = PLAY_LIMIT - 1200;
+    if ((Math.abs(P.pos.x) > edge || Math.abs(P.pos.z) > edge) && P.pos.x * P.vel.x + P.pos.z * P.vel.z > 0) {
+      const err = angDiff(headingOf(tmpV.set(-P.pos.x, 0, -P.pos.z)) * RAD, fd.hdg);
+      const dir = err > 0 ? 1 : -1;
+      const keys = bankTo(dir * 55, 10).map((k) => ({ ...k, label: (k.k === KEYDEF.D) === dir > 0 ? `Bank ${dir > 0 ? "right" : "left"} to turn back` : "Not so steep" }));
+      if (Math.abs(fd.bank) > 35) keys.push(hold(noseUpKey(), "Pull to turn"));
+      return { keys, now: "You're at the edge of the training area. Turn back toward the middle of the map." };
+    }
+    return null;
+  }
+
+  const coachEl = $id("coach"), keysEl = $id("c-keys"), logEl = $id("c-log"), bannerEl = $id("coach-banner");
+  function $id(id) {
+    return document.getElementById(id);
+  }
+  const SAVE_KEY = "viper-strike-training";
+  function loadDone() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(SAVE_KEY) || "[]"));
+    } catch {
+      return new Set();
+    }
+  }
+
+  const training = {
+    active: false,
+    idx: 0,
+    step: 0,
+    stepT: 0,
+    holdT: 0,
+    dt: 0,
+    data: {},
+    banner: 0,
+    drone: null,
+    droneKilled: false,
+    hidden: false,
+    tapAt: {},
+    done: loadDone(),
+    prev: null,
+    lastSig: "",
+    lastText: {},
+    get lesson() {
+      return LESSONS[this.idx];
+    },
+    cur() {
+      return this.lesson.steps[this.step];
+    },
+    // Called from startGame: the world is already reset.
+    begin(i) {
+      this.active = true;
+      this.prev = null;
+      logEl.innerHTML = "";
+      this.goto(i, false);
+    },
+    stop() {
+      this.active = false;
+      coachEl.classList.add("hidden");
+    },
+    setup(kind) {
+      const P = player;
+      resetPlayer(kind === "air" || kind === "final");
+      if (kind === "runway") {
+        const [x, z] = fieldToWorld(HOME, 0, HOME.len / 2 - 90);
+        P.pos.set(x, groundHeight(x, z) + JET.gearHeight, z);
+        P.hdg = 0;
+        P.quat.setFromEuler(eulerTmp.set(0, 0, 0, "YXZ"));
+        Object.assign(P, { engineOn: true, startT: -1, rpm: 0.6, throttle: 0, parkBrake: false });
+      } else if (kind === "final") {
+        const dist = 6000;
+        P.pos.set(HOME.x - 25, HOME.elev + JET.gearHeight + dist * GLIDE + 25, TD_Z - dist);
+        P.hdg = Math.PI;
+        P.quat.setFromEuler(eulerTmp.set(0.03, -Math.PI, 0, "YXZ"));
+        P.vel.set(0, -4, 88);
+        Object.assign(P, { throttle: 0.5, rpm: 0.8, gearPos: 0, gearCmd: 0, flapPos: 0, flapCmd: 0, airborneT: 60, everAirborne: true });
+      }
+      P.onGround = kind === "ground" || kind === "runway";
+      history.length = 0;
+      camInit = false;
+    },
+    clearDrones() {
+      for (let i = fighters.length - 1; i >= 0; i--) {
+        if (fighters[i].alive) scene.remove(fighters[i].mesh);
+        if (fighters[i].alive || fighters[i].drone) fighters.splice(i, 1);
+      }
+      this.drone = null;
+    },
+    spawnDrone(dist) {
+      const P = player;
+      const d = fwdOf(P.quat, V3()).setY(0);
+      if (d.lengthSq() < 1e-4) d.set(0, 0, -1);
+      d.normalize();
+      const pos = P.pos.clone().addScaledVector(d, dist);
+      pos.y = Math.max(pos.y, surfaceHeight(pos.x, pos.z) + 900);
+      // Put the drone on a wide circle that starts out heading the same way you are.
+      const R = 3200, a = Math.atan2(-d.x, d.z);
+      const center = V3(pos.x - Math.cos(a) * R, pos.y, pos.z - Math.sin(a) * R);
+      const f = new Fighter(pos, d, { drone: true, state: "patrol", center, orbitR: R, orbitA: a + 0.12, cruise: 150, speed: 160 });
+      f.name = "Drone";
+      fighters.push(f);
+      return f;
+    },
+    onDroneKill(f) {
+      if (f === this.drone) this.droneKilled = true;
+      this.log("Splash! Drone destroyed.", "good");
+      radio("Splash! Target destroyed.", { say: "Splash one!" });
+    },
+    goto(i, keep) {
+      this.idx = clamp(i, 0, LESSONS.length - 1);
+      const L = this.lesson;
+      this.banner = 0;
+      bannerEl.classList.add("hidden");
+      this.clearDrones();
+      player.designated = null;
+      if (!(keep && L.fits && L.fits(player))) {
+        if (keep) this.log("Repositioned the jet for this lesson.", "info");
+        this.setup(L.setup);
+        readFlight();
+      }
+      this.droneKilled = false;
+      if (L.drone) this.drone = this.spawnDrone(L.drone);
+      this.log(`Lesson ${this.idx + 1}: ${L.title}`, "head");
+      radio(`Lesson ${this.idx + 1}: ${L.title}.`, { say: `Lesson ${this.idx + 1}. ${L.title.replace("&", "and")}.` });
+      this.enterStep(0);
+    },
+    enterStep(n) {
+      this.step = n;
+      this.stepT = 0;
+      this.holdT = 0;
+      this.data = {};
+      const st = this.cur();
+      if (st && st.enter) st.enter(this.data);
+      this.lastText = {};
+    },
+    advance() {
+      const L = this.lesson;
+      const st = this.cur();
+      this.log(`✓ ${stripTags(st.text).split(/[.!]/)[0]}`, "good");
+      if (this.step + 1 < L.steps.length) {
+        Sound.chirp();
+        this.enterStep(this.step + 1);
+        return;
+      }
+      this.done.add(this.idx);
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify([...this.done]));
+      } catch {
+        /* progress saving is optional */
+      }
+      const next = LESSONS[this.idx + 1];
+      this.banner = 4.5;
+      bannerEl.innerHTML = `<b>LESSON COMPLETE</b><span>${L.title}</span>${next ? `<small>Next up: ${next.title}. Press <kbd>Y</kbd> to repeat this one.</small>` : ""}`;
+      bannerEl.classList.remove("hidden");
+      this.log(`Lesson ${this.idx + 1} complete!`, "good");
+      radio("Lesson complete. Nice flying!", { say: "Lesson complete. Nice flying." });
+    },
+    skip() {
+      if (this.idx + 1 < LESSONS.length) this.goto(this.idx + 1, true);
+    },
+    repeat() {
+      this.goto(this.idx, false);
+    },
+    // Crashing in training is free: show what happened and fly the lesson again.
+    retry(reason) {
+      const i = this.idx;
+      startGame(false, i);
+      this.log(`Crashed: ${reason}`, "warn");
+      this.log("No harm done. Let's try that again.", "info");
+    },
+    log(text, kind = "info") {
+      const t = Math.max(0, Math.round(gameTime));
+      const row = document.createElement("div");
+      row.className = `l-${kind}`;
+      row.innerHTML = `<time>${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}</time><span></span>`;
+      row.lastChild.textContent = text;
+      logEl.prepend(row);
+      while (logEl.children.length > 6) logEl.lastChild.remove();
+    },
+    // Watch the jet and narrate what's going on in the flight log.
+    watch(P) {
+      const n = {
+        engine: P.rpm > 0.58, park: P.parkBrake, rolling: P.onGround && P.vel.length() > 2, air: !P.onGround, gear: P.gearPos > 0.98 ? 1 : P.gearPos < 0.02 ? 0 : -1,
+        flaps: P.flapPos > 0.98 ? 1 : P.flapPos < 0.02 ? 0 : -1, ab: P.ab > 0.3, stall: P.stall, sonic: P.mach > 1, lock: P.lock, tgt: P.designated,
+        msl: P.missiles, flares: P.flares, hits: P.hits, view, brake: P.brake && P.onGround && P.vel.length() > 2,
+      };
+      const o = this.prev;
+      this.prev = n;
+      if (!o) return;
+      if (n.engine && !o.engine) this.log("Engine running: RPM steady at 60% idle.");
+      if (o.park && !n.park) this.log("Parking brake released.");
+      if (n.rolling && !o.rolling && !n.air) this.log("Wheels rolling.");
+      if (n.air && !o.air) this.log("Liftoff! The wheels left the runway.", "good");
+      if (!n.air && o.air) this.log(`Touchdown at ${Math.round(fd.kt)} kt.`, "good");
+      if (n.gear !== o.gear && n.gear >= 0) this.log(n.gear ? "Gear down and locked." : "Gear up: less drag, more speed.");
+      if (n.flaps !== o.flaps && n.flaps >= 0) this.log(n.flaps ? "Flaps down: more lift at low speed." : "Flaps up.");
+      if (n.ab && !o.ab) this.log("Afterburner lit: big thrust, but it drinks fuel.", "warn");
+      if (!n.ab && o.ab) this.log("Afterburner off.");
+      if (n.stall && !o.stall) this.log("Stall! Lower the nose and add power.", "warn");
+      if (n.sonic && !o.sonic) this.log("Supersonic! Past Mach 1.", "good");
+      if (n.brake && !o.brake) this.log("Braking.");
+      if (n.view !== o.view) {
+        this.log(n.view === "cockpit" ? "Cockpit view." : "Chase view.");
+        if (this.data.views !== undefined) this.data.views++;
+      }
+      if (n.tgt && n.tgt !== o.tgt && n.tgt.alive) this.log(`Target selected: ${n.tgt.name}.`);
+      if (n.lock === 2 && o.lock !== 2) this.log("Missile lock! Steady tone: fire now.", "good");
+      if (n.msl < o.msl) this.log(o.lock === 2 ? "Missile away, locked on." : "Missile away without a lock: it flies straight.");
+      if (n.flares < o.flares) {
+        this.log("Flares away.");
+        if (this.data.drops !== undefined) this.data.drops++;
+      }
+      if (n.hits > o.hits && gameTime - (this.lastHitLog || -9) > 1.5) {
+        this.lastHitLog = gameTime;
+        this.log("Hits on target!", "good");
+      }
+    },
+    update(dt) {
+      const P = player;
+      this.dt = dt;
+      this.stepT += dt;
+      // Training never runs out of anything.
+      P.fuel = FUEL_MAX;
+      if (P.ammo < 100) P.ammo = AMMO_MAX;
+      if (P.flares < 6) P.flares = FLARES_MAX;
+      if (P.missiles === 0 && !missiles.some((m) => m.alive && m.owner === "player")) {
+        Object.assign(P, { missiles: MISSILES_MAX });
+        P.stationUsed.fill(false);
+        jet.missiles.forEach((m) => (m.visible = true));
+        this.log("Missiles reloaded.");
+      }
+      if (Math.abs(P.pos.x) > 13500 || Math.abs(P.pos.z) > 13500) return crash("You flew out of the training area.", false);
+      readFlight();
+      this.watch(P);
+      if (this.banner > 0) {
+        this.banner -= dt;
+        if (this.banner <= 0) this.skip();
+      } else {
+        const L = this.lesson;
+        // Lost the drone (flew off, or it crashed)? Bring a fresh one.
+        if (L.drone && !this.droneKilled && (!this.drone || !this.drone.alive || this.drone.pos.distanceTo(P.pos) > 9000)) {
+          this.clearDrones();
+          this.drone = this.spawnDrone(L.drone);
+          this.log("A fresh drone is ahead of you.");
+          this.droneKilled = false;
+        }
+        const st = this.cur();
+        if (st && this.stepT > 0.4 && st.done(P, this.data)) this.advance();
+      }
+      this.render(P);
+    },
+    safety() {
+      const L = this.lesson;
+      return L.setup === "air" && this.banner <= 0 ? safetyKeys() : null;
+    },
+    currentKeys(P = player, safe = this.safety()) {
+      return this.banner > 0 ? [] : safe ? safe.keys : this.cur().keys(P, this.data);
+    },
+    render(P) {
+      const L = this.lesson, st = this.cur();
+      coachEl.classList.remove("hidden");
+      coachEl.classList.toggle("tips-off", this.hidden);
+      const safe = this.safety();
+      const ks = this.currentKeys(P, safe);
+      const now = this.banner > 0 ? "Lesson complete. Keep flying while the next one loads." : safe ? safe.now : st.now(P, this.data);
+      const prog = this.banner > 0 || safe || !st.prog ? null : st.prog(P, this.data);
+      this.setText("c-lesson", `LESSON ${this.idx + 1}/${LESSONS.length}`);
+      this.setText("c-step", L.free ? "PRACTICE" : `STEP ${Math.min(this.step + 1, L.steps.length)}/${L.steps.length}`);
+      this.setText("c-title", L.title);
+      this.setHTML("c-text", st.text);
+      this.setText("c-now", now);
+      $id("c-now-box").classList.toggle("alarm", !!safe);
+      $id("c-prog").classList.toggle("hidden", !prog);
+      if (prog) {
+        $id("c-bar").style.width = `${Math.round(clamp(prog.v, 0, 1) * 100)}%`;
+        this.setText("c-prog-label", prog.label);
+      }
+      // Rebuild the key bar only when the advice changes; light up keys as they're pressed.
+      const sig = ks.map((k) => k.k.cap + k.how + k.label).join("|");
+      if (sig !== this.lastSig) {
+        this.lastSig = sig;
+        keysEl.innerHTML = "";
+        if (!ks.length) keysEl.innerHTML = `<div class="k-none">${this.banner > 0 ? "Nice work!" : "No keys right now. Just watch."}</div>`;
+        for (const k of ks) {
+          const el = document.createElement("div");
+          el.className = `kc ${k.how}${k.k.wide ? " wide" : ""}`;
+          el.innerHTML = `<div class="cap"></div><div class="how">${k.how === "hold" ? "HOLD" : k.how === "tap" ? "TAP" : "GET READY"}</div><div class="lbl"></div>`;
+          el.firstChild.textContent = k.k.alt ? `${k.k.cap} ${k.k.alt}` : k.k.cap;
+          el.lastChild.textContent = k.label;
+          el._codes = k.k.codes;
+          keysEl.appendChild(el);
+        }
+      }
+      for (const el of keysEl.children) {
+        if (!el._codes) continue;
+        const down = el._codes.some((c) => keys.has(c) || realTime - (this.tapAt[c] || -9) < 0.3);
+        el.classList.toggle("down", down);
+      }
+    },
+    setText(id, v) {
+      if (this.lastText[id] === v) return;
+      this.lastText[id] = v;
+      $id(id).textContent = v;
+    },
+    setHTML(id, v) {
+      if (this.lastText[id] === v) return;
+      this.lastText[id] = v;
+      $id(id).innerHTML = v;
+    },
+  };
+  const stripTags = (h) => h.replace(/<[^>]+>/g, "");
+
+  // ===========================================================================
   // HUD (2D canvas over the 3D view)
   // ===========================================================================
   const hudCanvas = document.getElementById("hud");
@@ -3201,11 +4215,11 @@
     if (P.flapPos > 0.02) text(P.flapPos > 0.98 ? "FLAPS" : "FLAPS ···", bx + 26 * s, by - 88 * s, "left", AMBER);
     if (P.parkBrake || P.brake) text(P.parkBrake ? "PARK BRK" : "BRAKES", bx + 26 * s, by - 108 * s, "left", AMBER);
 
-    // ---- damage tape ----
+    // ---- damage tape (not in training, where nothing shoots back) ----
     const dx = bx, dy = by - 200 * s;
     hc.fillStyle = GREEN;
-    text("DAMAGE", dx, dy - 14 * s, "left", GREEN);
-    [["ENG", P.hp.engine], ["L WING", P.hp.lwing], ["R WING", P.hp.rwing], ["HULL", P.hp.hull]].forEach(([name, v], i) => {
+    if (!training.active) text("DAMAGE", dx, dy - 14 * s, "left", GREEN);
+    if (!training.active) [["ENG", P.hp.engine], ["L WING", P.hp.lwing], ["R WING", P.hp.rwing], ["HULL", P.hp.hull]].forEach(([name, v], i) => {
       const yy = dy + i * 17 * s;
       const c = v > 66 ? GREEN : v > 33 ? AMBER : RED;
       text(name, dx, yy, "left", c);
@@ -3231,10 +4245,15 @@
 
     // ---- objectives ----
     hc.fillStyle = GREEN;
-    text(`BANDITS ${mission.kills}/${FIGHTERS_TOTAL}`, 18 * s, 22 * s, "left", mission.kills === FIGHTERS_TOTAL ? WHITE : GREEN);
-    text(`AIRFIELD ${mission.airfield}/${AIRFIELD_TOTAL}`, 18 * s, 42 * s, "left", mission.airfield === AIRFIELD_TOTAL ? WHITE : GREEN);
-    text(`SAM ${mission.sams}/${SAM_TOTAL}`, 18 * s, 62 * s, "left", GREEN);
-    text(view === "cockpit" ? "COCKPIT  V" : "CHASE  V", 18 * s, 82 * s, "left", "rgba(141,255,168,0.5)");
+    if (training.active) {
+      text("TRAINING · NO ENEMIES", 18 * s, 22 * s, "left", WHITE);
+      text(view === "cockpit" ? "COCKPIT  V" : "CHASE  V", 18 * s, 42 * s, "left", "rgba(141,255,168,0.5)");
+    } else {
+      text(`BANDITS ${mission.kills}/${FIGHTERS_TOTAL}`, 18 * s, 22 * s, "left", mission.kills === FIGHTERS_TOTAL ? WHITE : GREEN);
+      text(`AIRFIELD ${mission.airfield}/${AIRFIELD_TOTAL}`, 18 * s, 42 * s, "left", mission.airfield === AIRFIELD_TOTAL ? WHITE : GREEN);
+      text(`SAM ${mission.sams}/${SAM_TOTAL}`, 18 * s, 62 * s, "left", GREEN);
+      text(view === "cockpit" ? "COCKPIT  V" : "CHASE  V", 18 * s, 82 * s, "left", "rgba(141,255,168,0.5)");
+    }
 
     drawRadar(w - 118 * s, h - 118 * s, 96 * s, s);
     drawWarnings(cx, cy + 150 * s, s);
@@ -3697,7 +4716,7 @@
   const history = [];
   const $ = (id) => document.getElementById(id);
   const ui = {
-    start: $("start-screen"), pause: $("pause-screen"), end: $("end-screen"), replay: $("replay-tag"),
+    start: $("start-screen"), pause: $("pause-screen"), end: $("end-screen"), replay: $("replay-tag"), train: $("training-screen"),
     endTitle: $("end-title"), endReason: $("end-reason"), endStats: $("end-stats"), keep: $("btn-keep"),
   };
 
@@ -3736,14 +4755,14 @@
     jet.root.visible = true;
   }
 
-  function startGame(airborne) {
+  function startGame(airborne, lesson = -1) {
     Sound.init();
     Sound.setVolume(settings.volume);
     Sound.pause(false);
     clearWorldState();
     resetPlayer(airborne);
     mission.reset(airborne);
-    instructor.reset(!airborne && !instructor.done);
+    instructor.reset(!airborne && !instructor.done && lesson < 0);
     sky.t = 0;
     updateTimeOfDay(0);
     gameTime = 0;
@@ -3752,11 +4771,18 @@
     replayEndT = -1;
     view = "chase";
     camInit = false;
-    for (const el of [ui.start, ui.pause, ui.end, ui.replay]) el.classList.add("hidden");
+    for (const el of [ui.start, ui.pause, ui.end, ui.replay, ui.train]) el.classList.add("hidden");
     state = "playing";
-    if (airborne) {
+    $("btn-lessons").classList.toggle("hidden", lesson < 0);
+    $("btn-restart").textContent = lesson < 0 ? "Restart sortie" : "Restart lesson";
+    if (lesson >= 0) {
+      if (lesson === 0) Sound.engineStart();
+      training.begin(lesson);
+    } else if (airborne) {
+      training.stop();
       radio("Viper one, Overlord. You're airborne over home base. Expect bandits from the northeast.", { say: "Viper one, Overlord. Expect bandits from the north east." });
     } else {
+      training.stop();
       Sound.engineStart();
       radio("Viper one, tower. Cleared to start. Taxi to runway three six.", { say: "Viper one, tower. Cleared to start. Taxi runway three six." });
     }
@@ -3807,6 +4833,7 @@
     } else if (state === "paused") {
       state = "playing";
       ui.pause.classList.add("hidden");
+      ui.train.classList.add("hidden");
       Sound.pause(false);
       canvas.focus();
     }
@@ -3830,12 +4857,15 @@
     updateGuns(dt);
     updateMissiles(dt);
     updateFlares(dt);
-    updateSams(dt);
+    if (!training.active) updateSams(dt);
+    else samWarn = 0;
     for (const f of fighters) f.update(dt);
     updateWrecks(dt);
     if (state !== "playing") return;
-    mission.update(dt);
+    if (training.active) training.update(dt);
+    else mission.update(dt);
     instructor.update(dt);
+    if (state !== "playing") return;
     updateTimeOfDay(dt);
     incomingMissile = missiles.some((m) => m.alive && m.owner !== "player" && m.target === playerTarget && m.p.distanceTo(P.pos) < 7000);
     tmpV.copy(P.pos).addScaledVector(P.vel, 4);
@@ -3892,8 +4922,12 @@
         jet.root.visible = true;
         camera.userData.replayInit = false;
         ui.replay.classList.remove("hidden");
-      } else endMission(false);
+      } else afterCrash();
     }
+  }
+  function afterCrash() {
+    if (training.active) training.retry(crashInfo ? crashInfo.reason : "");
+    else endMission(false);
   }
 
   function sampleHistory(t) {
@@ -3917,7 +4951,7 @@
       }
     } else {
       replayEndT += dt;
-      if (replayEndT > 2.4) endMission(false);
+      if (replayEndT > 2.4) afterCrash();
     }
   }
 
@@ -4051,6 +5085,27 @@
     keys.add(e.code);
     if (e.repeat) return;
     const P = player;
+    if (state === "playing") training.tapAt[e.code] = realTime;
+    if (state === "playing" && training.active) {
+      switch (e.code) {
+        case "KeyN":
+          training.skip();
+          break;
+        case "KeyY":
+          training.repeat();
+          break;
+        case "KeyL":
+          togglePause();
+          showLessons();
+          break;
+        case "KeyT":
+          if (fighters.filter((f) => f.alive && f.drone).length < 3) {
+            training.spawnDrone(1500);
+            training.log("Practice drone spawned ahead of you.");
+          }
+          break;
+      }
+    }
     if (state === "playing") {
       switch (e.code) {
         case "KeyG":
@@ -4081,6 +5136,7 @@
           break;
         case "KeyH":
           instructor.hidden = !instructor.hidden;
+          training.hidden = !training.hidden;
           break;
         case "KeyM":
           Sound.toggleMute();
@@ -4099,7 +5155,10 @@
     if (state === "playing") togglePause();
   });
   canvas.addEventListener("mousedown", (e) => {
-    if (state === "playing" && e.button === 0) firePlayerMissile(0);
+    if (state === "playing" && e.button === 0) {
+      training.tapAt.Mouse0 = realTime;
+      firePlayerMissile(0);
+    }
   });
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   canvas.tabIndex = 0;
@@ -4108,7 +5167,36 @@
   $("btn-start").onclick = () => startGame(false);
   $("btn-air").onclick = () => startGame(true);
   $("btn-resume").onclick = togglePause;
-  $("btn-restart").onclick = () => startGame(mission.airborne);
+  $("btn-restart").onclick = () => (training.active ? startGame(false, training.idx) : startGame(mission.airborne));
+  // Lesson picker, from the start screen or the pause menu.
+  let lessonsFrom = null;
+  function showLessons() {
+    lessonsFrom = state === "paused" ? ui.pause : ui.start;
+    lessonsFrom.classList.add("hidden");
+    const list = $("lesson-list");
+    list.innerHTML = "";
+    LESSONS.forEach((L, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = training.done.has(i) ? "done" : "";
+      b.innerHTML = `<span class="num">${training.done.has(i) ? "✓" : i + 1}</span><span><b></b><small></small></span>`;
+      b.querySelector("b").textContent = L.title;
+      b.querySelector("small").textContent = L.blurb;
+      b.onclick = () => startGame(false, i);
+      list.appendChild(b);
+    });
+    const first = LESSONS.findIndex((L, i) => !training.done.has(i));
+    const go = $("btn-train-go");
+    go.textContent = first <= 0 ? "Start lesson 1" : `Continue: lesson ${first + 1}`;
+    go.onclick = () => startGame(false, Math.max(first, 0));
+    ui.train.classList.remove("hidden");
+  }
+  $("btn-train").onclick = showLessons;
+  $("btn-lessons").onclick = showLessons;
+  $("btn-train-back").onclick = () => {
+    ui.train.classList.add("hidden");
+    (lessonsFrom || ui.start).classList.remove("hidden");
+  };
   $("btn-again").onclick = () => startGame(mission.airborne);
   $("btn-keep").onclick = () => {
     ui.end.classList.add("hidden");
@@ -4144,7 +5232,7 @@
   requestAnimationFrame(frame);
   window.__viper = { player, mission, fighters, groundTargets, missiles, startGame, get state() { return state; }, keys, crash, settings, HOME, ENEMY, groundHeight, eulerTmp, sky, jet, camera, renderer, explosion, updateTimeOfDay,
     step(dt, n) { for (let i = 0; i < n && state === 'playing'; i++) { updatePlaying(dt); updateEffects(dt); } },
-    get crashInfo() { return crashInfo; }, setView(v) { view = v; }, cycleTarget, firePlayerMissile, dropFlares };
+    get crashInfo() { return crashInfo; }, setView(v) { view = v; }, training, LESSONS, fd, cycleTarget, firePlayerMissile, dropFlares };
 })();
     </script>
   </body>
