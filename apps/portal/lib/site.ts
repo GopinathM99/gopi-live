@@ -8,7 +8,7 @@ export const site = {
    * and set this to its URL path, e.g. "/gopinath.jpg". A square image of at
    * least 640x640 looks best.
    */
-  photo: null as string | null,
+  photo: "/images/gopinath.jpg" as string | null,
   /** Slug of the game shown in the "Featured" spotlight. */
   featured: "nebula-strike",
 };
