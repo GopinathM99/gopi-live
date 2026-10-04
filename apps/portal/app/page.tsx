@@ -27,7 +27,7 @@ export default function Home() {
         <div className="container hero-inner">
           <div className="hero-copy">
             <p className="eyebrow">
-              <span className="pulse" aria-hidden="true" /> Now playing · {games.length} games
+              {games.length} free browser {games.length === 1 ? "game" : "games"}
             </p>
             <h1>
               <span className="hero-line">Press start.</span>
