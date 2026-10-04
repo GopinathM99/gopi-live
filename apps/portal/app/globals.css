@@ -113,7 +113,8 @@ a {
   transition: color 0.2s, background 0.2s;
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav a[aria-current="page"] {
   color: var(--text);
   background: var(--surface);
 }
@@ -420,6 +421,10 @@ a {
   display: block;
   white-space: nowrap;
   animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hero-line.wrap {
+  white-space: normal;
 }
 
 .hero-line + .hero-line {
@@ -895,9 +900,27 @@ a {
 .site-footer .container {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 12px 28px;
   padding-block: 28px;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.footer-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-nav a:hover,
+.footer-nav a[aria-current="page"] {
+  color: var(--accent);
 }
 
 .site-footer .container > span:first-child {
@@ -908,6 +931,197 @@ a {
 
 .accent {
   color: var(--accent);
+}
+
+/* ---------- Contact ---------- */
+
+.contact-hero {
+  min-height: 0;
+  align-items: stretch;
+  padding: 64px 0 80px;
+}
+
+.contact-hero h1 {
+  font-size: clamp(2.15rem, 6vw, 4.75rem);
+}
+
+.contact-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.contact-item {
+  min-width: 0;
+}
+
+.contact-item-email {
+  grid-column: 1 / -1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px 8px 16px;
+  border-radius: var(--radius);
+  background: rgba(18, 18, 31, 0.92);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 50px -32px rgba(0, 0, 0, 0.8);
+}
+
+.contact-email-link,
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.contact-email-link {
+  flex: 1;
+  padding: 8px 4px;
+}
+
+.contact-row {
+  position: relative;
+  height: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: rgba(18, 18, 31, 0.92);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 50px -32px rgba(0, 0, 0, 0.8);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.contact-item-email {
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.contact-row:hover,
+.contact-item-email:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 22px 44px -24px rgba(167, 139, 250, 0.55);
+}
+
+.contact-icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--accent);
+  background: rgba(94, 234, 212, 0.12);
+}
+
+.contact-item[data-kind="linkedin"] .contact-icon {
+  color: var(--violet);
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.contact-item[data-kind="github"] .contact-icon {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.contact-item[data-kind="trailblazer"] .contact-icon {
+  color: var(--gold);
+  background: rgba(251, 191, 36, 0.12);
+}
+
+.contact-item[data-kind="website"] .contact-icon {
+  color: var(--pink);
+  background: rgba(244, 114, 182, 0.12);
+}
+
+.contact-icon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.contact-icon svg:not(:has([fill="currentColor"])) {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.contact-label {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.contact-value {
+  color: var(--muted);
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.contact-external {
+  flex: none;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.contact-external svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contact-row:hover .contact-external {
+  color: var(--text);
+}
+
+.copy-email {
+  flex: none;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.copy-email svg {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.copy-email.is-copied,
+.copy-email.is-copied:hover {
+  color: #07070d;
+  background: var(--accent);
+  border-color: transparent;
+  transform: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---------- Play page ---------- */
@@ -1045,11 +1259,55 @@ a {
   .games-section {
     padding-top: 64px;
   }
+
+  .contact-hero {
+    padding: 48px 0 64px;
+  }
+
+  .contact-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-inner {
+    height: auto;
+    min-height: 64px;
+    padding-block: 10px;
+    gap: 8px 12px;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }
 
 @media (max-width: 480px) {
   .user-name {
     display: none;
+  }
+
+  .logo {
+    font-size: 1.15rem;
+  }
+
+  .nav a {
+    padding: 8px 10px;
+  }
+
+  .contact-item-email {
+    flex-wrap: wrap;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .contact-email-link {
+    flex: 1 1 calc(100% - 60px);
+  }
+
+  .copy-email {
+    margin-left: 60px;
   }
 
   .hero-line {
