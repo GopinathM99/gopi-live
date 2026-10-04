@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
+import NavLinks from "@/components/NavLinks";
 import UserMenu from "@/components/UserMenu";
 import "./globals.css";
 
@@ -26,8 +27,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="logo-mark" aria-hidden="true" />
               gopi<span>.live</span>
             </Link>
-            <nav className="nav">
-              <Link href="/#games">Games</Link>
+            <nav className="nav" aria-label="Primary">
+              <NavLinks />
               <UserMenu />
             </nav>
           </div>
@@ -38,6 +39,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span>
               gopi<span className="accent">.live</span>
             </span>
+            <nav className="footer-nav" aria-label="Footer">
+              <NavLinks />
+            </nav>
             <span>Made for players. Runs in your browser.</span>
           </div>
         </footer>
