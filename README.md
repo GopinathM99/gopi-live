@@ -28,7 +28,12 @@ pnpm typecheck
 
 Sudoku puzzle-generation checks run with `node --test tests/sudoku.test.cjs`.
 
-## Home page photo
+## Home page artwork
+
+The hero uses the miniature arcade background at
+`apps/portal/public/images/arcade-room.webp`, served responsively through
+Next.js Image. Dark overlays in `app/globals.css` keep the copy readable
+on desktop and mobile. The foreground portrait remains available.
 
 The hero shows a placeholder portrait until a photo is set. Drop a square
 image (640x640 or larger) into `apps/portal/public/`, e.g.
