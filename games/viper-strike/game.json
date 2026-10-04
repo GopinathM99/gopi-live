@@ -1,9 +1,10 @@
 {
   "title": "Viper Strike",
-  "description": "Start the engines, taxi, and take off in a 3D fighter jet, then dogfight enemy fighters, dodge SAMs, and wreck the enemy airfield before your fuel runs out.",
+  "description": "Start the engines, taxi, and take off in a 3D fighter jet, then dogfight enemy fighters, dodge SAMs, and wreck the enemy airfield before your fuel runs out. New pilots can start with Flight training, where a coach shows exactly which key to press.",
   "thumbnail": "thumbnail.svg",
   "entry": "index.html",
   "controls": [
+    "New to flying? Pick Flight training: ten lessons with a live coach that shows which key to press right now, no enemies and no fuel limit",
     "W and S (or the up and down arrows) pitch the nose. S pulls the nose up",
     "A and D (or the left and right arrows) roll. Z and C work the rudder and steer on the ground",
     "Shift and Ctrl set the throttle (also + and -, or Page Up and Page Down). Full throttle lights the afterburner",
@@ -13,5 +14,10 @@
     "P or Esc pauses, with stick sensitivity and volume settings. M mutes",
     "Land at home base and stop to rearm and refuel"
   ],
-  "tags": ["3d", "flight", "action", "shooter"]
+  "tags": [
+    "3d",
+    "flight",
+    "action",
+    "shooter"
+  ]
 }

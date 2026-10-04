@@ -1,8 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import GameGallery from "@/components/GameGallery";
 import ProfilePhoto from "@/components/ProfilePhoto";
 import RandomGameButton from "@/components/RandomGameButton";
-import Starfield from "@/components/Starfield";
 import { getAllGames } from "@/lib/games";
 import { site } from "@/lib/site";
 
@@ -21,13 +21,13 @@ export default function Home() {
   return (
     <>
       <section className="hero">
-        <Starfield />
-        <div className="hero-glow" aria-hidden="true" />
-        <div className="grid-floor" aria-hidden="true" />
+        <div className="hero-background" aria-hidden="true">
+          <Image src="/images/arcade-room.webp" alt="" fill sizes="100vw" preload />
+        </div>
         <div className="container hero-inner">
           <div className="hero-copy">
             <p className="eyebrow">
-              <span className="pulse" aria-hidden="true" /> Now playing · {games.length} games
+              {games.length} free browser {games.length === 1 ? "game" : "games"}
             </p>
             <h1>
               <span className="hero-line">Press start.</span>

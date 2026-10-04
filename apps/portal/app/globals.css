@@ -145,6 +145,23 @@ a {
   border: 1px solid var(--border);
 }
 
+.nav .user-avatar-link {
+  display: block;
+  padding: 0;
+  border-radius: 50%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav .user-avatar-link:hover {
+  background: none;
+  transform: scale(1.08);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.user-avatar-link img.user-avatar {
+  display: block;
+}
+
 .user-avatar-fallback {
   display: grid;
   place-items: center;
@@ -273,6 +290,73 @@ a {
   color: var(--text);
 }
 
+/* ---------- Avatar picker ---------- */
+
+.avatar-card {
+  max-width: 640px;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+.avatar-option {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 12px 6px 10px;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.avatar-option img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+}
+
+.avatar-option:hover {
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.avatar-option[aria-checked="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px -6px rgba(94, 234, 212, 0.7);
+}
+
+.avatar-option:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.avatar-picker .auth-error {
+  margin: 16px 0 0;
+}
+
+.avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.avatar-actions .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  animation: none;
+}
+
 /* ---------- Buttons ---------- */
 
 .btn {
@@ -337,41 +421,25 @@ a {
   padding: 72px 0 96px;
 }
 
-.starfield {
+.hero-background {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
   z-index: -1;
+  pointer-events: none;
 }
 
-.hero-glow {
+.hero-background img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-background::after {
+  content: "";
   position: absolute;
-  inset: -20%;
-  z-index: -2;
+  inset: 0;
   background:
-    radial-gradient(40% 40% at 20% 30%, rgba(94, 234, 212, 0.18), transparent 70%),
-    radial-gradient(35% 40% at 80% 40%, rgba(167, 139, 250, 0.25), transparent 70%),
-    radial-gradient(30% 30% at 60% 85%, rgba(244, 114, 182, 0.18), transparent 70%);
-  animation: drift 18s ease-in-out infinite alternate;
-}
-
-.grid-floor {
-  position: absolute;
-  left: -50%;
-  right: -50%;
-  bottom: 0;
-  height: 45%;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgba(167, 139, 250, 0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167, 139, 250, 0.35) 1px, transparent 1px);
-  background-size: 56px 56px;
-  transform: perspective(500px) rotateX(62deg);
-  transform-origin: bottom;
-  mask-image: linear-gradient(to top, black 10%, transparent 90%);
-  -webkit-mask-image: linear-gradient(to top, black 10%, transparent 90%);
-  animation: grid-scroll 3s linear infinite;
+    linear-gradient(90deg, rgba(7, 7, 13, 0.8), rgba(7, 7, 13, 0.35) 55%, rgba(7, 7, 13, 0.18)),
+    linear-gradient(0deg, var(--bg), transparent 28%, transparent 82%, rgba(7, 7, 13, 0.25));
 }
 
 .hero-inner {
@@ -398,16 +466,6 @@ a {
   border: 1px solid rgba(94, 234, 212, 0.3);
   border-radius: 999px;
   background: rgba(94, 234, 212, 0.06);
-}
-
-.pulse {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.7);
-  animation: pulse 2s infinite;
 }
 
 .hero h1 {
@@ -552,25 +610,6 @@ a {
   font-size: 0.75rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-}
-
-.portrait-badge {
-  position: absolute;
-  right: 4%;
-  bottom: 8%;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(7, 7, 13, 0.75);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .scroll-hint {
@@ -942,7 +981,15 @@ a {
 }
 
 .contact-hero h1 {
-  font-size: clamp(2.15rem, 6vw, 4.75rem);
+  font-size: clamp(2.1rem, 4.2vw, 3.7rem);
+}
+
+.contact-hero .lede {
+  margin-bottom: 0;
+}
+
+.contact-section {
+  padding: 28px 0 8px;
 }
 
 .contact-list {
@@ -1178,27 +1225,6 @@ a {
   }
 }
 
-@keyframes drift {
-  to {
-    transform: translate(4%, -3%) scale(1.08);
-  }
-}
-
-@keyframes grid-scroll {
-  to {
-    background-position: 0 56px;
-  }
-}
-
-@keyframes pulse {
-  70% {
-    box-shadow: 0 0 0 10px rgba(94, 234, 212, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(94, 234, 212, 0);
-  }
-}
-
 @keyframes scroll-dot {
   0% {
     opacity: 0;
@@ -1224,6 +1250,14 @@ a {
 @media (max-width: 860px) {
   .hero {
     padding: 48px 0 88px;
+  }
+
+  .hero-background img {
+    object-position: 65% center;
+  }
+
+  .hero-background::after {
+    background: linear-gradient(180deg, rgba(7, 7, 13, 0.25), rgba(7, 7, 13, 0.55) 35%, rgba(7, 7, 13, 0.88) 65%, var(--bg));
   }
 
   .hero-inner {
@@ -1296,6 +1330,15 @@ a {
     padding: 8px 10px;
   }
 
+  .avatar-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .avatar-option img {
+    width: 56px;
+    height: 56px;
+  }
+
   .contact-item-email {
     flex-wrap: wrap;
     align-items: stretch;
@@ -1344,10 +1387,7 @@ a {
   .marquee-track,
   .portrait-ring,
   .logo-mark,
-  .hero-glow,
-  .grid-floor,
   .portrait,
-  .pulse,
   .scroll-hint span {
     animation: none !important;
   }
@@ -1379,6 +1419,22 @@ a {
   height: 100%;
   border: 0;
   display: block;
+}
+
+.frame-tall:not(:fullscreen):not(.frame-fill) {
+  aspect-ratio: auto;
+  max-height: none;
+  container-type: inline-size;
+}
+
+.frame-tall:not(:fullscreen):not(.frame-fill) iframe {
+  height: 680px;
+}
+
+@container (max-width: 620px) {
+  .frame-tall:not(:fullscreen):not(.frame-fill) iframe {
+    height: calc(100cqw + 480px);
+  }
 }
 
 .frame:fullscreen,

@@ -9,6 +9,8 @@ export type GameManifest = {
   thumbnail: string;
   /** HTML entry point relative to the game folder, e.g. "index.html". */
   entry: string;
+  /** Extra room for games with a board and controls stacked on mobile. */
+  layout?: "tall";
   /** Human-readable control hints shown next to the game. */
   controls: string[];
   tags?: string[];
@@ -38,6 +40,7 @@ function parseManifest(slug: string, raw: unknown): GameManifest {
   }
   if (!isStringArray(m.controls)) fail(`"controls" must be an array of strings`);
   if (m.tags !== undefined && !isStringArray(m.tags)) fail(`"tags" must be an array of strings`);
+  if (m.layout !== undefined && m.layout !== "tall") fail(`"layout" must be "tall" when provided`);
   return m as unknown as GameManifest;
 }
 

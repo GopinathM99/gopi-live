@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import CopyEmailButton from "@/components/CopyEmailButton";
-import Starfield from "@/components/Starfield";
 import { contact, type ContactProfile } from "@/lib/contact";
 
 export const metadata: Metadata = {
@@ -11,15 +11,14 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
+    <>
     <section className="hero contact-hero">
-      <Starfield />
-      <div className="hero-glow" aria-hidden="true" />
-      <div className="grid-floor" aria-hidden="true" />
-      <div className="container">
+      <div className="hero-background" aria-hidden="true">
+        <Image src="/images/arcade-room.webp" alt="" fill sizes="100vw" preload />
+      </div>
+      <div className="container hero-inner">
         <div className="hero-copy">
-          <p className="eyebrow">
-            <span className="pulse" aria-hidden="true" /> Get in touch
-          </p>
+          <p className="eyebrow">Get in touch</p>
           <h1>
             <span className="hero-line">Say hello.</span>
             <span className="hero-line gradient-text wrap">{contact.name}</span>
@@ -28,7 +27,22 @@ export default function ContactPage() {
             Questions about the games, a collaboration, or just a hello. Email is the direct line. The profiles below are public.
           </p>
         </div>
-
+        <div className="portrait">
+          <div className="portrait-ring" aria-hidden="true" />
+          <div className="portrait-inner">
+            <Image
+              src="/images/gopinath-profile.jpg"
+              alt="Gopinath Merugumala"
+              fill
+              preload
+              sizes="(max-width: 860px) 70vw, 380px"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <div className="container contact-section">
         <ul className="contact-list">
           <li className="contact-item contact-item-email reveal" data-kind="email">
             <a className="contact-email-link" href={`mailto:${contact.email}`}>
@@ -53,8 +67,8 @@ export default function ContactPage() {
             </li>
           ))}
         </ul>
-      </div>
-    </section>
+    </div>
+    </>
   );
 }
 

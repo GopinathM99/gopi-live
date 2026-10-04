@@ -19,10 +19,6 @@ export default function ProfilePhoto() {
           </div>
         )}
       </div>
-      <span className="portrait-badge">
-        <span className="pulse" aria-hidden="true" />
-        Player 1
-      </span>
     </div>
   );
 }

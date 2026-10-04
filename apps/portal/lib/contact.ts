@@ -1,7 +1,6 @@
 /**
- * Public contact details for Gopinath Merugumala.
- * Only channels he has published belong here. Never add a phone number
- * or a street address.
+ * Published contact details for the contact page.
+ * The only email address on this page is `email` below.
  */
 export const contact = {
   name: "Gopinath Merugumala",

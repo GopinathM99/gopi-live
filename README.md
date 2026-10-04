@@ -26,7 +26,14 @@ pnpm build      # production build of the portal
 pnpm typecheck
 ```
 
-## Home page photo
+Sudoku puzzle-generation checks run with `node --test tests/sudoku.test.cjs`.
+
+## Home page artwork
+
+The hero uses the miniature arcade background at
+`apps/portal/public/images/arcade-room.webp`, served responsively through
+Next.js Image. Dark overlays in `app/globals.css` keep the copy readable
+on desktop and mobile. The foreground portrait remains available.
 
 The hero shows a placeholder portrait until a photo is set. Drop a square
 image (640x640 or larger) into `apps/portal/public/`, e.g.
@@ -52,6 +59,8 @@ image (640x640 or larger) into `apps/portal/public/`, e.g.
 
    `thumbnail` and `entry` are paths relative to the game folder. The build
    fails if a required field is missing or a referenced file doesn't exist.
+   Games with vertically stacked controls can also set `"layout": "tall"`
+   for a taller, responsive frame (see Sudoku).
 
 4. Run `pnpm dev`; the game appears on the home page and plays at
    `/play/<slug>`.
@@ -105,6 +114,12 @@ the site works without it.
    `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for
    Production and Preview, then redeploy. For local dev, put the same two
    lines in `apps/portal/.env.local`.
+
+After their first sign-in, players are asked to pick a gamer avatar
+(`/avatar`). The choice is saved on their Supabase user as
+`user_metadata.gamer_avatar`, so it sticks across sign-ins and devices until
+they change it by clicking their avatar in the header. The avatars are SVGs in
+`apps/portal/public/avatars/`, listed in `apps/portal/lib/avatars.ts`.
 
 ## Not here yet
 
