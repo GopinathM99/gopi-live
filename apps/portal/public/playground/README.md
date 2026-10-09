@@ -1,6 +1,6 @@
 # gopi.playground
 
-A separate, static prototype arcade for trying games before adding them to gopi.live. This directory is hosted independently with GitHub Pages; neither the production portal nor its game catalog imports these files.
+A separate, static prototype arcade for trying games before adding them to gopi.live. This directory is served as a standalone site on the branch’s Vercel preview URL; the production game catalog does not import these files.
 
 ## Play locally
 
@@ -18,14 +18,16 @@ Browser validation covers catalog navigation, persisted picks, Stack Attack plac
 
 ## Hosting and review
 
-The source lives in `docs/` on the `codex/game-playground-site` review branch of `GopinathM99/gopi-live`. GitHub Pages publishes that branch's `/docs` directory, providing a separate website while the review PR remains unmerged. There is no custom-domain configuration and no change to the Vercel production app.
+The source lives in `apps/portal/public/playground/` on the `codex/game-playground-site` preview branch of `GopinathM99/gopi-live`. Its separate website is at the branch's Vercel preview address followed by `/playground/index.html`. Vercel's existing GitHub integration deploys the review branch automatically; no main-branch changes or production deployment are needed. Preview access follows the existing Vercel project's authentication settings.
 
-Do not merge an assistant-created PR. If the owner later merges this PR, the Pages source branch remains the preview branch unless the owner changes it. Keep that branch until Pages has been deliberately moved to another source.
+Keep this preview-only PR in draft and unmerged. Do not merge an assistant-created PR. After a game is approved, open a separate integration PR for just that game. Keep the playground branch so its preview remains available.
+
+GitHub repository creation and enabling Pages were unavailable to the connected integration, so this uses the existing Vercel preview workflow. No GitHub Pages site or new remote repository was created.
 
 ## Adding and promoting games
 
-Each `games/<slug>/` directory is a self-contained browser bundle with an HTML entry point, scripts, styles, thumbnail, and `game.json`. All local URLs are relative so the site works beneath a GitHub Pages project path.
+Each `games/<slug>/` directory is a self-contained browser bundle with an HTML entry point, scripts, styles, thumbnail, and `game.json`. All local URLs are relative so the site works beneath the preview’s `/playground/` path.
 
-Plain canvas and JavaScript engine games (Three.js, Phaser, PixiJS, Babylon.js, PlayCanvas) can use this structure. Keep runtime assets with the bundle. Single-threaded Unity/Godot/C++/Rust WebAssembly exports can also be hosted after their export/build pipeline is prepared. Threaded WebAssembly requiring cross-origin isolation needs hosting that can supply the required COOP/COEP headers; GitHub Pages cannot configure these response headers. Backend multiplayer needs separate services and credentials; this playground has none.
+Plain canvas and JavaScript engine games (Three.js, Phaser, PixiJS, Babylon.js, PlayCanvas) can use this structure. Keep runtime assets with the bundle. Single-threaded Unity/Godot/C++/Rust WebAssembly exports can also be hosted after their export/build pipeline is prepared. Threaded WebAssembly requiring cross-origin isolation needs hosting that can supply the required COOP/COEP headers; the current standalone bundles do not configure these response headers. Backend multiplayer needs separate services and credentials; this playground has none.
 
 After approval, copy the selected game bundle into the production `games/` directory in a separate integration PR, adapt its Playground navigation, and verify it inside the portal's sandboxed iframe. Storage failures are already handled. Assets and entry points are represented by the same manifest shape used by the production catalog.
