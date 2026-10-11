@@ -128,3 +128,10 @@ they change it by clicking their avatar in the header. The avatars are SVGs in
 Saves and leaderboards (Supabase), WebAssembly builds for C++/Rust/Unity/
 Godot games (GitHub Actions), large assets in object storage, multiplayer, and
 serving games from a separate `play.gopi.live` origin.
+
+## Maintenance and contributions
+
+Follow [the repository instructions](AGENTS.md) and
+[maintenance workflow](docs/maintenance.md). All changes go through PRs using
+[the PR template](.github/pull_request_template.md). Agents never merge their
+own PRs or PRs produced by their coding agents.
