@@ -1,0 +1,13 @@
+{
+  "title": "Pocket Mayhem",
+  "description": "A tiny robot, a toybox full of trouble, and wildly irresponsible upgrades. Survive eight minutes and beat the final boss—or go endless.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "WASD, arrow keys, or the thumbstick to move; weapons aim and shoot automatically",
+    "Space, Shift, or Dash to dodge and smash through toys",
+    "F or Overdrive when charged for a healing blast and boosted weapons",
+    "P or Escape to pause; M to toggle sound; 1–3 to choose an upgrade"
+  ],
+  "tags": ["3D", "survival", "roguelite", "action"]
+}

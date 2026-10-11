@@ -8,13 +8,26 @@ From this directory, run `python3 -m http.server 4173`, then open the local serv
 
 - **Stack Attack:** tap the canvas, use Drop block, or press Space to stack. Overhang is trimmed; perfect streaks gradually recover width. P pauses. A best score is stored in this browser when storage is available.
 - **Tiny Golf:** six courses with walls, sand, linked portals, bumpers, and a moving gate. Drag back anywhere on the course and release, or adjust the aim/power sliders and choose Putt. Arrow keys adjust aim and power; Space shoots; P pauses. Reset hole is available for practice.
+- **Pocket Mayhem:** a Three.js 3D survival roguelite. Move with WASD/arrows or the phone thumbstick; weapons aim and fire automatically. Space/Shift or the dash button smashes through enemies with temporary invulnerability. Kills charge Overdrive: press F or the star button for nine seconds of increased speed/firepower, a repair, and a clearing blast. P/Esc pauses, M toggles synthesized music and effects. Leaving the tab also pauses the run.
 - The catalog shortlist is local to the browser. Copy picks into chat to request promotion; nothing is submitted to a server.
 
 ## Test
 
-Run `node --test tests/engines.test.cjs` here. The tests cover stacking overlap, perfect drops, collisions, friction, sand, portals, and complete playable shot sequences for every golf course.
+Run `node --test tests/*.test.cjs` here. The tests cover stacking overlap, perfect drops, golf collisions and complete shot sequences, plus Pocket Mayhem movement, damage, weapons, upgrades/evolutions, replay determinism, pickup accounting, boss progression, and full-length seeded runs with all three robots. The survival bot has complete simulation knowledge; its victories establish that the game is completable, not a human difficulty rating. In the Codex runtime, use `--test-isolation=none` to expose individual test output through its Node wrapper.
 
 Browser validation covers catalog navigation, persisted picks, Stack Attack placement/pause/restart, all six golf holes and the scorecard, touch dragging, and layouts at 320, 390, 768, and desktop widths.
+
+Pocket Mayhem's additional browser checks and screenshot provenance are documented in [`docs/screenshots/pr-19/README.md`](../../../../docs/screenshots/pr-19/README.md).
+
+## Pocket Mayhem run guide
+
+- Choose **Zip** (stronger cannon and faster movement), **Orbit** (saws and extra health), or **Bolt** (chain lightning). Standard and Cozy use the same controls and upgrades; Cozy reduces incoming damage and slows normal spawning.
+- Collect cyan batteries for XP. Level-ups pause the game for a choice of three upgrades; keys 1–3 select them. Two remix rerolls are available per run. Pink pickups repair health; lime magnets sweep up all existing batteries. Lime crates contain supplies.
+- Four weapons evolve when a rank-four weapon meets its rank-two boost: Pop cannon + Overclock, Pocket rockets + Power cell, Satellite saws + Big magnet, and Chain reaction + Overclock. Recipes appear on weapon cards and in How to play.
+- Bosses arrive at 2:30, 5:00, and 8:00, after the previous boss is defeated. Red wind-ups announce dangerous attacks. The final boss adds charging reinforcements; defeating it wins the run. Endless overtime keeps the build and increases boss health.
+- Daily remix seeds upgrade/spawn randomness from the UTC date. Actions consume randomness, so matching the date alone does not guarantee identical choices after different play. There is no shared leaderboard or backend.
+- Personal best, completed runs, wins, kills, chosen robot, and sound preference are local to the browser. A win followed by overtime records one run and one win. Storage failures fall back to this visit. There is no mid-run resume after reloading.
+- Requires WebGL2. Graphics, textures, and audio are procedural; the bundled Three.js 0.186.1 file is reused from STREET YEET with its MIT license. There are no runtime CDN requests. Performance adapts resolution when frames are slow; reduced-motion mode removes shake and reduces particles.
 
 ## Hosting and review
 
