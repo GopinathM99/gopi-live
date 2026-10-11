@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#112634">
+  <meta name="description" content="One tiny robot. A toybox full of trouble. A 3D survival roguelite with wild upgrades, boss fights, and one-more-run energy.">
+  <title>Pocket Mayhem · gopi.playground</title>
+  <link rel="icon" href="thumbnail.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-state="loading">
+  <canvas id="world" tabindex="0" aria-label="3D toybox arena. Move with WASD or arrow keys. Weapons fire automatically. Space or Shift dashes, F activates Overdrive, and P pauses."></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div id="damage-flash" aria-hidden="true"></div>
+  <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+
+  <section id="menu" class="menu screen" aria-labelledby="title">
+    <header class="menu-header"><a class="brand" href="../../index.html"><span aria-hidden="true">✳</span> gopi<span class="slash">/</span><b>playground</b></a><span class="edition">03 / THE BIG EXPERIMENT</span></header>
+    <div class="menu-copy">
+      <p class="eyebrow"><i></i> SMALL ROBOT. BIG PROBLEMS.</p>
+      <h1 id="title">POCKET<br><span>MAYHEM</span><em>.</em></h1>
+      <p class="intro">A toybox full of trouble.<br>A pocket full of wildly irresponsible upgrades.</p>
+      <div class="run-specs"><span><b>08:00</b> to the final boss</span><span><b>4</b> weapon evolutions</span><span><b>∞</b> combinations</span></div>
+      <div class="pilot-heading"><label>CHOOSE YOUR LITTLE MENACE</label><button id="guide-open" class="text-button">How to play →</button></div>
+      <div id="pilots" class="pilots" role="group" aria-label="Choose your robot"></div>
+      <p id="pilot-note" class="pilot-note"></p>
+      <div class="run-options"><label for="difficulty">Challenge <select id="difficulty"><option value="standard">Standard</option><option value="cozy">Cozy · gentler hits</option></select></label><label class="daily"><input type="checkbox" id="daily"> Daily remix</label></div>
+      <button class="primary start-button" id="start">Let’s make a mess <span aria-hidden="true">→</span></button>
+      <p class="start-hint">You move. We handle the shooting.</p>
+      <div class="menu-bottom"><span id="personal-best">PERSONAL BEST <b>—</b></span><button id="menu-sound" class="text-button" aria-pressed="true">Sound on ♪</button></div>
+    </div>
+    <div class="hero-sticker" aria-hidden="true"><span>100%</span><b>POCKET-SIZED<br>CHAOS</b><i>✦</i></div>
+    <footer class="menu-footer"><span>BUILT FOR ONE MORE RUN.</span><span>WASD / ARROWS · SPACE TO DASH · F TO OVERDRIVE</span></footer>
+  </section>
+
+  <div id="hud" class="hud" hidden>
+    <div class="top-hud">
+      <div class="health-panel"><div class="health-heading"><b id="pilot-name">ZIP</b><span id="health-label">100 / 100</span></div><div class="health-track"><div id="health-fill"></div></div><div class="xp-row"><span id="level-label">LV 1</span><div class="xp-track"><div id="xp-fill"></div></div><span id="shield-label"></span></div></div>
+      <div class="timer-panel"><span id="zone-label">TOYBOX / SURVIVE</span><b id="timer">00:00</b><small id="goal-label">FINAL BOSS AT 08:00</small></div>
+      <div class="hud-actions"><button id="sound" class="icon-button" aria-label="Mute sound" aria-pressed="true">♪</button><button id="fullscreen" class="icon-button" aria-label="Toggle fullscreen">⛶</button><button id="pause" class="icon-button" aria-label="Pause game"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></div>
+    </div>
+    <div id="boss-hud" class="boss-hud" hidden><div><b id="boss-name"></b><span id="boss-health"></span></div><div class="boss-track"><span id="boss-fill"></span></div><small>Watch the red wind-up. Dash through the opening.</small></div>
+    <div id="toast" class="toast" role="status" hidden><span id="toast-kicker"></span><b id="toast-title"></b></div>
+    <div class="run-counters"><span id="kills">0</span> TOYS RECYCLED <b id="combo"></b></div>
+    <div id="loadout" class="loadout" aria-label="Your upgrades"></div>
+    <div class="abilities"><button id="surge" class="ability surge" disabled><span class="ability-icon">✦</span><b id="surge-label">0%</b><small>OVERDRIVE <kbd>F</kbd></small></button><button id="dash" class="ability dash"><span class="ability-icon">»</span><b id="dash-label">DASH</b><small>SMASH THROUGH <kbd>SPACE</kbd></small></button></div>
+    <div id="joystick" class="joystick" aria-hidden="true"><div class="stick-base"><div id="stick-knob"></div><span>✥</span></div><small>MOVE</small></div>
+    <div class="desktop-hint"><kbd>W</kbd><span><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><b>KEEP MOVING</b></div>
+    <p id="first-tip" class="first-tip">Collect blue batteries. Build something ridiculous.</p>
+  </div>
+
+  <section id="upgrade" class="modal screen" hidden role="dialog" aria-modal="true" aria-labelledby="upgrade-title">
+    <div class="upgrade-panel"><p class="eyebrow">A LITTLE MORE UNREASONABLE</p><h2 id="upgrade-title">Pick your next problem.</h2><p class="modal-copy">Time is paused. Three good ideas. One very bad day for the toys.</p><div id="upgrade-cards" class="upgrade-cards"></div><div class="upgrade-footer"><span id="upgrade-level">LEVEL 2</span><button id="reroll" class="secondary">Remix choices <span>2 left</span></button><small>PRESS 1, 2 OR 3 TO PICK</small></div></div>
+  </section>
+
+  <section id="paused" class="modal screen" hidden role="dialog" aria-modal="true" aria-labelledby="pause-title">
+    <div class="dialog-panel"><p class="eyebrow">A MOMENT OF PEACE</p><h2 id="pause-title">Chaos can wait.</h2><p class="modal-copy">Your robot is right where you left it.</p><div id="pause-build" class="pause-build"></div><button id="resume" class="primary">Back to the mayhem <span>→</span></button><button id="restart" class="secondary wide">Start a fresh run</button><a class="text-link" href="../../index.html">← Back to the playground</a><p class="controls-copy">Move: WASD / arrows / thumbstick<br>Dash: Space / Shift · Overdrive: F · Pause: P / Esc<br>Weapons fire automatically. Cyan batteries give upgrades.<br>Pink pickups heal. Lime pickups collect every battery.</p></div>
+  </section>
+
+  <section id="results" class="modal screen" hidden role="dialog" aria-modal="true" aria-labelledby="result-title">
+    <div class="dialog-panel result-panel"><p class="eyebrow" id="result-kicker">A BEAUTIFUL LITTLE DISASTER</p><h2 id="result-title">Small robot.<br>Big effort.</h2><p class="modal-copy" id="result-copy"></p><div class="score-total"><span>RUN SCORE</span><b id="result-score">0</b><small id="result-best"></small></div><div class="result-stats"><div><b id="result-time"></b><span>SURVIVED</span></div><div><b id="result-kills"></b><span>RECYCLED</span></div><div><b id="result-level"></b><span>LEVEL</span></div><div><b id="result-bosses"></b><span>BOSSES</span></div></div><div id="result-build" class="pause-build"></div><button id="endless" class="primary" hidden>Keep the chaos going <span>∞</span></button><button id="again" class="primary">One more little run <span>→</span></button><button id="change-pilot" class="secondary wide">Change your robot</button><a class="text-link" href="../../index.html">← Back to the playground</a></div>
+  </section>
+
+  <section id="guide" class="modal screen" hidden role="dialog" aria-modal="true" aria-labelledby="guide-title">
+    <div class="dialog-panel guide-panel"><p class="eyebrow">THE VERY SHORT FIELD GUIDE</p><h2 id="guide-title">Make a little trouble.</h2><ol><li><b>Move, don’t aim.</b> Your robot shoots the nearest toy automatically. Use WASD, arrows, or the thumbstick.</li><li><b>Dash through danger.</b> Space or Shift makes you briefly invincible and smashes toys you pass through.</li><li><b>Collect the blue batteries.</b> Level up, pause the action, and choose one of three upgrades. Lime crates hide batteries and repairs.</li><li><b>Unleash Overdrive.</b> Recycling toys charges it. Press F or the star button for nine seconds of boosted firepower and a healing blast.</li><li><b>Read the wind-up.</b> Red marks announce incoming attacks. Bosses arrive at 2:30, 5:00, and 8:00. Beat the final boss to win—or go endless.</li></ol><h3>GOOD IDEAS, BAD COMBINATIONS</h3><div class="recipes"><p><b>Confetti cannon</b><span>Pop cannon 4 + Overclock 2</span></p><p><b>Firework party</b><span>Pocket rockets 4 + Power cell 2</span></p><p><b>Saturn rings</b><span>Satellite saws 4 + Big magnet 2</span></p><p><b>Thunderstorm</b><span>Chain reaction 4 + Overclock 2</span></p></div><p class="controls-copy">Daily remix uses today’s seed for upgrade and spawn randomness. Your choices and movement still shape the run. Personal records stay in this browser when storage is available.</p><button id="guide-close" class="primary">Got it. Let’s play <span>→</span></button></div>
+  </section>
+
+  <section id="error" class="modal screen" hidden role="alert"><div class="dialog-panel"><p class="eyebrow">A SMALL TECHNICAL DETOUR</p><h2>Our toybox needs 3D.</h2><p class="modal-copy" id="error-copy">Your browser couldn’t start WebGL. Try a browser with hardware acceleration enabled, or play another game in the meantime.</p><button class="primary" id="reload">Try again</button><a class="text-link" href="../../index.html">← Back to the playground</a></div></section>
+  <noscript><div class="noscript">Pocket Mayhem needs JavaScript to play. <a href="../../index.html">Return to the playground</a>.</div></noscript>
+  <script src="vendor/three.min.js"></script>
+  <script src="engine.js"></script>
+  <script src="view.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

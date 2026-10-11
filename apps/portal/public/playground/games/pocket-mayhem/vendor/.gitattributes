@@ -1,0 +1,2 @@
+# Preserve the upstream bundle byte-for-byte, including shader whitespace.
+three.min.js linguist-vendored -whitespace

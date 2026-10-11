@@ -1,0 +1,15 @@
+{
+  "title": "Tiny Golf",
+  "description": "Six miniature courses with bank shots, sand traps, portals, and a moving gate.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Drag back anywhere on the course and release to putt",
+    "Arrow keys adjust aim and power; Space to shoot",
+    "P to pause; Reset hole to practice again"
+  ],
+  "tags": [
+    "sports",
+    "physics"
+  ]
+}
