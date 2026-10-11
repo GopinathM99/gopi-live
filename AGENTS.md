@@ -5,7 +5,8 @@
 - Never push directly to `main`. Make changes on a branch and open a PR.
 - Never merge your own PRs, including PRs created by coding agents working for
   you. Do not enable auto-merge on those PRs or arrange for another agent to merge
-  them. Leave the merge to the repository owner.
+  them. Leave the merge to the repository owner or an independent reviewer whom
+  the user has authorized to merge that work.
 - Do not submit an independent approval or a "looks good" review for your own
   work or your coding agents' work. Check and test your changes before opening
   the PR, and report that validation accurately.

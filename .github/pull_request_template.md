@@ -34,7 +34,8 @@ For changes without a UI effect, explain why screenshots are not applicable. -->
 - Work produced by: <!-- Name the agent/person and any delegated coding agents. -->
 - Preview: <!-- Link the Vercel preview when available. -->
 - Vercel/required checks on the latest commit: <!-- Passed / pending / failed. -->
-- Independent reviewer / merger: <!-- Leave your own PR for the owner. -->
+- Independent reviewer / merger: <!-- Leave your own PR for the owner or a
+reviewer independently authorized by the user to merge that work. -->
 
 <!-- Never merge or enable auto-merge on your own PR or your coding agents' PRs.
 Passing checks do not replace an independent review of the diff. -->

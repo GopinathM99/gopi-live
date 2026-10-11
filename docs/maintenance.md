@@ -29,9 +29,10 @@ The separate `salesforce-interview-app` Vercel project belongs to
 
 - Keep draft and preview-only PRs out of the merge queue. PR #19 is explicitly
   preview-only and must stay unmerged.
-- Leave PRs produced by you or your coding agents to the owner for independent
-  review and merging. This includes enabling auto-merge or asking another agent
-  to perform the merge on your behalf.
+- Never merge PRs produced by you or your coding agents, enable auto-merge on
+  them, or ask another agent to merge them on your behalf. Leave them for
+  independent review and merging by the owner or a reviewer whom the user has
+  authorized to merge that work.
 - For other PRs in an authorized review task, inspect the complete diff for
   correctness, regressions, privacy, sandbox behavior, and unnecessary scope.
   Check that the PR description supplies the required context and evidence.
@@ -103,6 +104,7 @@ the next run.
   playground preview, with successful Vercel checks.
 - [PR #21](https://github.com/GopinathM99/gopi-live/pull/21) contained the selected
   Tiny Golf and Stack Attack integration. It was open with successful Vercel
-  checks and must be left to the owner to merge.
+  checks. Its author (Codex) must not merge it; the owner or an independently
+  authorized reviewer may review and merge it once the current checks pass.
 - There were 21 remote branches including `main`, before adding the branch for
   this workflow. No branch deletions were performed.
