@@ -26,7 +26,8 @@ pnpm build      # production build of the portal
 pnpm typecheck
 ```
 
-Sudoku puzzle-generation checks run with `node --test tests/sudoku.test.cjs`.
+Game checks (Sudoku generation, Stack Attack placement, and Tiny Golf physics
+and course completion) run with `node --test tests/*.test.cjs`.
 
 ## Home page artwork
 
@@ -60,7 +61,8 @@ image (640x640 or larger) into `apps/portal/public/`, e.g.
    `thumbnail` and `entry` are paths relative to the game folder. The build
    fails if a required field is missing or a referenced file doesn't exist.
    Games with vertically stacked controls can also set `"layout": "tall"`
-   for a taller, responsive frame (see Sudoku).
+   for a taller, responsive frame (see Sudoku), or `"layout": "compact"`
+   for smaller arcade boards with controls below (see Tiny Golf and Stack Attack).
 
 4. Run `pnpm dev`; the game appears on the home page and plays at
    `/play/<slug>`.

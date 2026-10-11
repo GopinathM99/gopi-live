@@ -1,0 +1,15 @@
+{
+  "title": "Stack Attack",
+  "description": "Time your drops, build perfect streaks, and chase a taller tower.",
+  "thumbnail": "thumbnail.svg",
+  "entry": "index.html",
+  "controls": [
+    "Tap or click the tower, press Space, or use Drop block",
+    "P to pause; Start over to restart"
+  ],
+  "tags": [
+    "arcade",
+    "precision"
+  ],
+  "layout": "compact"
+}
