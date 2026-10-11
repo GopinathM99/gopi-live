@@ -26,7 +26,8 @@ pnpm build      # production build of the portal
 pnpm typecheck
 ```
 
-Sudoku puzzle-generation checks run with `node --test tests/sudoku.test.cjs`.
+Game checks (Sudoku generation, Stack Attack placement, and Tiny Golf physics
+and course completion) run with `node --test tests/*.test.cjs`.
 
 ## Home page artwork
 
@@ -60,7 +61,8 @@ image (640x640 or larger) into `apps/portal/public/`, e.g.
    `thumbnail` and `entry` are paths relative to the game folder. The build
    fails if a required field is missing or a referenced file doesn't exist.
    Games with vertically stacked controls can also set `"layout": "tall"`
-   for a taller, responsive frame (see Sudoku).
+   for a taller, responsive frame (see Sudoku), or `"layout": "compact"`
+   for smaller arcade boards with controls below (see Tiny Golf and Stack Attack).
 
 4. Run `pnpm dev`; the game appears on the home page and plays at
    `/play/<slug>`.
@@ -126,3 +128,10 @@ they change it by clicking their avatar in the header. The avatars are SVGs in
 Saves and leaderboards (Supabase), WebAssembly builds for C++/Rust/Unity/
 Godot games (GitHub Actions), large assets in object storage, multiplayer, and
 serving games from a separate `play.gopi.live` origin.
+
+## Maintenance and contributions
+
+Follow [the repository instructions](AGENTS.md) and
+[maintenance workflow](docs/maintenance.md). All changes go through PRs using
+[the PR template](.github/pull_request_template.md). Agents never merge their
+own PRs or PRs produced by their coding agents.

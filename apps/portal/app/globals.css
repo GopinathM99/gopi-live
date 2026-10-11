@@ -1421,7 +1421,8 @@ a {
   display: block;
 }
 
-.frame-tall:not(:fullscreen):not(.frame-fill) {
+.frame-tall:not(:fullscreen):not(.frame-fill),
+.frame-compact:not(:fullscreen):not(.frame-fill) {
   aspect-ratio: auto;
   max-height: none;
   container-type: inline-size;
@@ -1429,6 +1430,10 @@ a {
 
 .frame-tall:not(:fullscreen):not(.frame-fill) iframe {
   height: 680px;
+}
+
+.frame-compact:not(:fullscreen):not(.frame-fill) iframe {
+  height: clamp(600px, calc(100cqw + 280px), 680px);
 }
 
 @container (max-width: 620px) {
