@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type Props = { src: string; title: string; layout?: "tall" };
+type Props = { src: string; title: string; layout?: "tall" | "compact" };
 
 // Wraps a game's iframe with a maximize/restore button. Uses the Fullscreen API
 // when the browser allows it, and otherwise (e.g. iPhone Safari) fills the window.
@@ -61,7 +61,7 @@ export default function GameFrame({ src, title, layout }: Props) {
   }
 
   return (
-    <div ref={frameRef} className={["frame", layout === "tall" && "frame-tall", windowFill && "frame-fill"].filter(Boolean).join(" ")}>
+    <div ref={frameRef} className={["frame", layout && `frame-${layout}`, windowFill && "frame-fill"].filter(Boolean).join(" ")}>
       {/* Games run sandboxed: scripts only, no access to the portal's origin. */}
       <iframe
         ref={iframeRef}
